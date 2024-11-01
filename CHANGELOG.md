@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ## [Current trunk] - started 2019-09-01
 
-Requires libvips 8.9+.
+Requires libvips 8.12+.
 
 ### Added
 - Support for true streaming ([#225](https://github.com/weserv/images/pull/225)).
@@ -44,7 +44,7 @@ Requires libvips 8.9+.
 - Attempt to decode corrupted or invalid images ([#194](https://github.com/weserv/images/issues/194)).
 - Docker image improvements ([#215](https://github.com/weserv/images/pull/215), [#216](https://github.com/weserv/images/pull/216), [#230](https://github.com/weserv/images/pull/230) and [#283](https://github.com/weserv/images/pull/283)).
 - Return an error when the maximum number of pages is exceeded ([#243](https://github.com/weserv/images/issues/243)).
-- Bump minimum required libvips version to 8.9.
+- Bump minimum required libvips version to 8.12.
 - Allow arbitrary values for the max-age parameter ([#292](https://github.com/weserv/images/issues/292)).
 - Increase rate limit quota to 2500 requests per 10 minutes ([#196](https://github.com/weserv/images/issues/196)).
 - The name of the project, CLI and shared library name (`imagesweserv` -> `weserv`).

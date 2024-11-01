@@ -56,12 +56,7 @@ TEST_CASE("output", "[stream]") {
         VImage image = process_file<VImage>(test_image, params);
 
         CHECK_THAT(image.get_string("vips-loader"), Equals("heifload_buffer"));
-
-        // "heif-compression" metadata added in vips 8.11
-        if (vips_version(0) > 8 ||
-            vips_version(0) == 8 && vips_version(1) >= 11) {
-            CHECK_THAT(image.get_string("heif-compression"), Equals("av1"));
-        }
+        CHECK_THAT(image.get_string("heif-compression"), Equals("av1"));
 
         CHECK(image.width() == 300);
         CHECK(image.height() == 300);
@@ -87,9 +82,7 @@ TEST_CASE("output", "[stream]") {
 
     SECTION("gif") {
         if (vips_type_find("VipsOperation", "gifload_buffer") == 0 ||
-            vips_type_find("VipsOperation", pre_8_12
-                                                ? "magicksave_buffer"
-                                                : "gifsave_target") == 0) {
+            vips_type_find("VipsOperation", "gifsave_buffer") == 0) {
             SUCCEED("no gif support, skipping test");
             return;
         }

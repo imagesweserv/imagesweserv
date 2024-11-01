@@ -74,7 +74,7 @@ find_package(Catch2 3.0.1 QUIET)
 
 # Find libvips (required)
 find_package(PkgConfig)
-pkg_check_modules(VIPS vips-cpp>=8.9 REQUIRED)
+pkg_check_modules(VIPS vips-cpp>=8.12 REQUIRED)
 
 # Create the shared API library
 add_subdirectory(src/api)

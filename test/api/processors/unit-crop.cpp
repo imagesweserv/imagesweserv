@@ -241,9 +241,7 @@ TEST_CASE("bad extract area", "[crop]") {
 
 TEST_CASE("animated image", "[crop]") {
     if (vips_type_find("VipsOperation", "gifload_buffer") == 0 ||
-        vips_type_find("VipsOperation", pre_8_12
-                                            ? "magicksave_buffer"
-                                            : "gifsave_target") == 0) {
+        vips_type_find("VipsOperation", "gifsave_buffer") == 0) {
         SUCCEED("no gif support, skipping test");
         return;
     }

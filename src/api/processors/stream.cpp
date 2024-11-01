@@ -367,13 +367,8 @@ void Stream::append_save_options<Output::Webp>(vips::VOption *options) const {
     // Set quality (default is 80)
     options->set("Q", quality);
 
-#if VIPS_VERSION_AT_LEAST(8, 12, 0)
     // Control the CPU effort spent on improving compression (default 4)
     options->set("effort", static_cast<int>(config_.webp_effort));
-#else
-    // Prior to libvips 8.12 this was named as "reduction_effort"
-    options->set("reduction_effort", static_cast<int>(config_.webp_effort));
-#endif
 }
 
 template <>
@@ -393,13 +388,8 @@ void Stream::append_save_options<Output::Avif>(vips::VOption *options) const {
     // Set compression format to AV1
     options->set("compression", VIPS_FOREIGN_HEIF_COMPRESSION_AV1);
 
-#if VIPS_VERSION_AT_LEAST(8, 12, 0)
     // Control the CPU effort spent on improving compression (default 4)
     options->set("effort", static_cast<int>(config_.avif_effort));
-#elif VIPS_VERSION_AT_LEAST(8, 10, 2)
-    // Prior to libvips 8.12 this was named as "speed"
-    options->set("speed", 9 - static_cast<int>(config_.avif_effort));
-#endif
 }
 
 template <>
@@ -422,14 +412,8 @@ void Stream::append_save_options<Output::Tiff>(vips::VOption *options) const {
 
 template <>
 void Stream::append_save_options<Output::Gif>(vips::VOption *options) const {
-// libvips 8.12 features a gifsave operation that uses cgif and libimagequant
-#if VIPS_VERSION_AT_LEAST(8, 12, 0)
     // Control the CPU effort spent on improving compression (default 7)
     options->set("effort", static_cast<int>(config_.gif_effort));
-#else  // libvips prior to 8.12 uses *magick for saving to gif
-    // Set the format option to hint the file type
-    options->set("format", "gif");
-#endif
 }
 
 void Stream::append_save_options(const Output &output,

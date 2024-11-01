@@ -7,7 +7,7 @@
  * `pcre2` (for nginx rewrite module)
  * `zlib` (for nginx gzip module)
  * `openssl` (for SSL support)
- * `libvips` >= 8.9
+ * `libvips` >= 8.12
 
 ## Install instructions
 

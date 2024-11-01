@@ -65,10 +65,8 @@ ApiManagerImpl::ApiManagerImpl(std::unique_ptr<ApiEnvInterface> env)
         // Disable the libvips cache -- it won't help and will just burn memory
         vips_cache_set_max(0);
 
-#if VIPS_VERSION_AT_LEAST(8, 10, 0)
         // We limit the pipe within the nginx module
         vips_pipe_read_limit_set(-1);
-#endif
 
         handler_id_ = g_log_set_handler(
             "VIPS", static_cast<GLogLevelFlags>(G_LOG_LEVEL_WARNING),

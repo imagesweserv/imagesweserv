@@ -469,14 +469,9 @@ VImage Thumbnail::process(const VImage &image) const {
 
     // Colour management.
     if (has_icc_profile) {
-#if VIPS_VERSION_AT_LEAST(8, 11, 0)
         // Ensure images with P3 profiles retain full gamut.
         const char *processing_profile =
             image.interpretation() == VIPS_INTERPRETATION_RGB16 ? "p3" : "srgb";
-#else
-        // P3 fallback built-in profile not available.
-        const char *processing_profile = "srgb";
-#endif
 
         // If there's some kind of import profile, we can transform to the
         // output.

@@ -7,10 +7,6 @@
 std::shared_ptr<Fixtures> fixtures;
 std::shared_ptr<weserv::api::ApiManager> api_manager;
 
-// libvips prior to 8.12 uses *magick for saving to gif
-bool pre_8_12 =
-    vips_version(0) < 8 || (vips_version(0) == 8 && vips_version(1) < 12);
-
 VImage buffer_to_image(const std::string &buf) {
     const char *operation_name =
         vips_foreign_find_load_buffer(buf.data(), buf.size());

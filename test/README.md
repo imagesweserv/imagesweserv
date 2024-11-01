@@ -16,7 +16,7 @@ information on how to extend the tests.
 The test suite is run with GitHub Actions but can also be run manually, the
 following dependencies are required to run the unit tests:
 
-* libvips version >= 8.9
+* libvips version >= 8.12
 
 Other dependencies (such as [Catch2](https://github.com/catchorg/Catch2)) are
 installed using the `FetchContent` module within CMake.
