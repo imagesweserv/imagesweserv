@@ -5,7 +5,7 @@ FROM alpine:3.20
 
 LABEL maintainer="Kleis Auke Wolthuizen <info@kleisauke.nl>"
 
-ARG NGINX_VERSION=1.27.0
+ARG NGINX_VERSION=1.27.2
 
 # Copy the contents of this repository to the container
 COPY . /var/www/imagesweserv
