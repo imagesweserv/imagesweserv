@@ -93,7 +93,7 @@ TEST_CASE("fixed", "[thumbnail]") {
 
 TEST_CASE("invalid height", "[thumbnail]") {
     auto test_image = fixtures->input_jpg;
-    auto params = "w=320&h=100000000";
+    auto params = "w=320&h=1000000000";
 
     VImage image = process_file<VImage>(test_image, params);
 

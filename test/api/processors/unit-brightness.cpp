@@ -55,7 +55,7 @@ TEST_CASE("brightness", "[brightness]") {
 
     SECTION("invalid") {
         auto test_image = fixtures->input_jpg;
-        auto params = "bri=100000000";
+        auto params = "bri=1000000000";
 
         VImage image = process_file<VImage>(test_image, params);
 
