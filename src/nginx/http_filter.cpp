@@ -164,7 +164,14 @@ ngx_int_t ngx_weserv_chunked_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
     prev = &buf->shadow;
 
     for (;;) {
-        rc = ngx_http_parse_chunked(r, buf, &ctx->chunked);
+        // In NGINX version 1.27.2, the signature of ngx_http_parse_chunked()
+        // was modified to enable passing upstream response trailers to the
+        // client.
+        rc = ngx_http_parse_chunked(r, buf, &ctx->chunked
+#if defined(nginx_version) && nginx_version >= 1027002
+                                    , 0
+#endif
+        );
 
         if (rc == NGX_OK) {
             // A chunk has been parsed successfully
