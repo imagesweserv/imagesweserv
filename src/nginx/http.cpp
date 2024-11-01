@@ -355,7 +355,7 @@ ngx_int_t ngx_weserv_upstream_process_status_line(ngx_http_request_t *r) {
     ngx_buf_t *buf = &r->upstream->buffer;
 
     // str is only used in debug mode
-    ngx_str_t str = {(size_t)(buf->last - buf->pos), buf->pos};
+    ngx_str_t str = {static_cast<size_t>(buf->last - buf->pos), buf->pos};
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "Received (partial) http response:\n%V\n\n", &str);
 #endif
@@ -462,11 +462,12 @@ ngx_int_t ngx_weserv_upstream_process_header(ngx_http_request_t *r) {
             // A header line has been parsed successfully
 
             ngx_str_t name = {
-                (size_t)(r->header_name_end - r->header_name_start),
+                static_cast<size_t>(r->header_name_end - r->header_name_start),
                 r->header_name_start};
             ngx_strlow(name.data, name.data, name.len);
-            ngx_str_t value = {(size_t)(r->header_end - r->header_start),
-                               r->header_start};
+            ngx_str_t value = {
+                static_cast<size_t>(r->header_end - r->header_start),
+                r->header_start};
 
             ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                            "weserv header: \"%V: %V\"", &name, &value);

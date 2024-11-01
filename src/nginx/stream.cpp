@@ -55,7 +55,8 @@ int64_t NgxTarget::write(const void *data, size_t length) {
 
         for (/* void */; seek_cl_; seek_cl_ = seek_cl_->next) {
             ngx_buf_t *b = seek_cl_->buf;
-            size_t size = ngx_min((size_t)(b->last - b->pos), length);
+            size_t size =
+                ngx_min(static_cast<size_t>(b->last - b->pos), length);
             ngx_memcpy(b->pos, data, size);
             bytes_written += size;
             length -= size;
@@ -106,7 +107,7 @@ int64_t NgxTarget::read(void *data, size_t length) {
 
     for (/* void */; seek_cl_; seek_cl_ = seek_cl_->next) {
         ngx_buf_t *b = seek_cl_->buf;
-        size_t size = ngx_min((size_t)(b->last - b->pos), length);
+        size_t size = ngx_min(static_cast<size_t>(b->last - b->pos), length);
 
         data = ngx_cpymem(data, b->pos, size);
         b->pos += size;

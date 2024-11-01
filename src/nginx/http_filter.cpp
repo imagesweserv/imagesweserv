@@ -201,7 +201,7 @@ ngx_int_t ngx_weserv_chunked_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
                            b->num, b->pos);
 
             if (buf->last - buf->pos >= ctx->chunked.size) {
-                buf->pos += (size_t)ctx->chunked.size;
+                buf->pos += static_cast<size_t>(ctx->chunked.size);
                 b->last = buf->pos;
                 ctx->chunked.size = 0;
 
