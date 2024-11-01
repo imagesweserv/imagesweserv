@@ -9,9 +9,12 @@ on:
   pull_request:
     branches:
       - 5.x
+permissions: {}
 jobs:
   CI:
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     continue-on-error: ${{ matrix.libvips-version == 'master' }}
     strategy:
       fail-fast: true
@@ -85,6 +88,9 @@ jobs:
   docker-publish:
     needs: CI
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -114,8 +120,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ secrets.CR_USER }}
-          password: ${{ secrets.CR_PAT }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
