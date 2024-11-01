@@ -16,7 +16,7 @@ namespace weserv::nginx {
  */
 class NgxSource : public api::io::SourceInterface {
  public:
-    NgxSource(ngx_chain_t *in) : in_(in), first_in_(in) {}
+    NgxSource(u_char *data, int64_t length) : data_(data), length_(length) {}
 
     ~NgxSource() override = default;
 
@@ -25,8 +25,8 @@ class NgxSource : public api::io::SourceInterface {
     int64_t seek(int64_t offset, int whence) override;
 
  private:
-    ngx_chain_t *in_;
-    ngx_chain_t *first_in_;
+    u_char *data_;
+    int64_t length_;
 
     /* The current read point.
      */

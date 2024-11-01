@@ -32,8 +32,7 @@ ngx_int_t ngx_weserv_upstream_process_header(ngx_http_request_t *r);
  */
 Status ngx_weserv_upstream_set_url(ngx_pool_t *pool,
                                    ngx_http_upstream_t *upstream, ngx_str_t url,
-                                   ngx_array_t *deny,
-                                   ngx_str_t *host_header,
+                                   ngx_array_t *deny, ngx_str_t *host_header,
                                    ngx_str_t *url_path) {
     ngx_url_t parsed_url;
     ngx_memzero(&parsed_url, sizeof(parsed_url));
@@ -80,7 +79,7 @@ Status ngx_weserv_upstream_set_url(ngx_pool_t *pool,
                 Status::ErrorCause::Application};
     }
 
-    // This condition is true if the provided URL is not a domain name, but 
+    // This condition is true if the provided URL is not a domain name, but
     // rather an IP address, for example: ?url=http://46.4.13.221/...
     bool has_ip = parsed_url.addrs != nullptr && parsed_url.addrs[0].sockaddr;
 
@@ -277,17 +276,15 @@ ngx_int_t ngx_weserv_upstream_create_request(ngx_http_request_t *r) {
     chain->buf = buf;
     chain->next = nullptr;
 
-#if NGX_DEBUG
-    if (ctx->debug == 1) {
-        ctx->in = chain;
-
-        return NGX_DONE;
-    }
-#endif
-
     // Attach the buffer to the request
     r->upstream->request_bufs = chain;
     // r->subrequest_in_memory = 1;
+
+#if NGX_DEBUG
+    if (ctx->debug == 1) {
+        return NGX_DONE;
+    }
+#endif
 
     return NGX_OK;
 }

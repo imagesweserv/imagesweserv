@@ -70,9 +70,11 @@ struct ngx_weserv_base_ctx_t {
     virtual ~ngx_weserv_base_ctx_t() = default;
 
     /**
-     * The incoming chain.
+     * The incoming image.
      */
-    ngx_chain_t *in;
+    u_char *image;
+    u_char *last;
+    size_t length;
 };
 
 /**

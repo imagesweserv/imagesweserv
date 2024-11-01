@@ -11,83 +11,36 @@ ngx_str_t application_json = ngx_string("application/json");
 // See: https://github.com/weserv/images/issues/186
 const time_t MAX_AGE_DEFAULT = 60 * 60 * 24 * 365;
 
-int64_t ngx_weserv_chain_read(ngx_chain_t **in, void *data, size_t length) {
-    int64_t bytes_read = 0;
-    ngx_chain_t *cl;
-
-    for (cl = *in; cl; cl = cl->next) {
-        ngx_buf_t *b = cl->buf;
-        size_t size = ngx_min((size_t)(b->last - b->pos), length);
-
-        data = ngx_cpymem(data, b->pos, size);
-        b->pos += size;
-        bytes_read += size;
-        length -= size;
-
-        if (length == 0 || b->last_buf) {
-            break;
-        }
-    }
-
-    *in = cl;
-
-    return bytes_read;
-}
-
-void ngx_weserv_chain_seek(ngx_chain_t **in, int64_t offset) {
-    int64_t remainder = 0;
-    ngx_chain_t *cl;
-
-    for (cl = *in; cl; cl = cl->next) {
-        ngx_buf_t *b = cl->buf;
-        int64_t size = b->end - b->start;
-        int64_t to_seek = ngx_min(size, offset);
-        offset -= to_seek;
-
-        if (to_seek == size) {
-            continue;
-        }
-
-        if (offset == 0) {
-            remainder = to_seek;
-            break;
-        }
-    }
-
-    *in = cl;
-
-    // Mark subsequent buffers as unconsumed
-    for (/* void */; cl; cl = cl->next) {
-        cl->buf->pos = cl->buf->start + remainder;
-        remainder = 0;
-    }
-}
-
 int64_t NgxSource::read(void *data, size_t length) {
-    int64_t bytes_read = ngx_weserv_chain_read(&in_, data, length);
+    int64_t bytes_read =
+        ngx_min(static_cast<int64_t>(length), length_ - read_position_);
+    ngx_memcpy(data, data_ + read_position_, bytes_read);
     read_position_ += bytes_read;
     return bytes_read;
 }
 
 int64_t NgxSource::seek(int64_t offset, int whence) {
+    int64_t new_pos = 0;
+
     switch (whence) {
         case SEEK_SET:
-            in_ = first_in_;
-            read_position_ = offset;
+            new_pos = offset;
+            break;
+        case SEEK_CUR:
+            new_pos = read_position_ + offset;
             break;
         case SEEK_END:
-            for (/* void */; in_; in_ = in_->next) {
-                read_position_ += in_->buf->last - in_->buf->pos;
-            }
-            // fall through
-        case SEEK_CUR:
-            read_position_ += offset;
+            new_pos = length_ + offset;
             break;
     }
 
-    ngx_weserv_chain_seek(&in_, offset);
+    // Don't allow out of range seeks
+    if (new_pos < 0 || new_pos > length_) {
+        return -1;
+    }
 
-    return read_position_;
+    read_position_ = new_pos;
+    return new_pos;
 }
 
 void NgxTarget::setup(const std::string &extension) {
@@ -149,7 +102,22 @@ int64_t NgxTarget::write(const void *data, size_t length) {
 }
 
 int64_t NgxTarget::read(void *data, size_t length) {
-    int64_t bytes_read = ngx_weserv_chain_read(&seek_cl_, data, length);
+    int64_t bytes_read = 0;
+
+    for (/* void */; seek_cl_; seek_cl_ = seek_cl_->next) {
+        ngx_buf_t *b = seek_cl_->buf;
+        size_t size = ngx_min((size_t)(b->last - b->pos), length);
+
+        data = ngx_cpymem(data, b->pos, size);
+        b->pos += size;
+        bytes_read += size;
+        length -= size;
+
+        if (length == 0 || b->last_buf) {
+            break;
+        }
+    }
+
     write_position_ += bytes_read;
     return bytes_read;
 }
@@ -169,7 +137,29 @@ int64_t NgxTarget::seek(int64_t offset, int whence) {
             break;
     }
 
-    ngx_weserv_chain_seek(&seek_cl_, offset);
+    int64_t remainder = 0;
+
+    for (/* void */; seek_cl_; seek_cl_ = seek_cl_->next) {
+        ngx_buf_t *b = seek_cl_->buf;
+        int64_t size = b->end - b->start;
+        int64_t to_seek = ngx_min(size, offset);
+        offset -= to_seek;
+
+        if (to_seek == size) {
+            continue;
+        }
+
+        if (offset == 0) {
+            remainder = to_seek;
+            break;
+        }
+    }
+
+    // Mark subsequent buffers as unconsumed
+    for (ngx_chain_t *cl = seek_cl_; cl; cl = cl->next) {
+        cl->buf->pos = cl->buf->start + remainder;
+        remainder = 0;
+    }
 
     return write_position_;
 }
