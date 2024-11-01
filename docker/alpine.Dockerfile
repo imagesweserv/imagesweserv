@@ -1,5 +1,5 @@
 # Based on:
-# https://hg.nginx.org/pkg-oss/file/tip/alpine/Makefile
+# https://github.com/nginx/pkg-oss/blob/master/alpine/Makefile
 # https://github.com/nginxinc/docker-nginx/blob/master/mainline/alpine/Dockerfile
 FROM alpine:3.20
 

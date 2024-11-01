@@ -2,7 +2,7 @@
 
 This document describes how to use weserv/images with Docker.
 
-## Hosted image on [GitHub Container Registry](https://github.com/orgs/weserv/packages/container/package/images)
+## Hosted image on [GitHub Container Registry](https://github.com/weserv/images/pkgs/container/images)
 
 1. Pull and run the `ghcr.io/weserv/images` container.
    ```bash
