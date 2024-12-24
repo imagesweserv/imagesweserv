@@ -45,7 +45,7 @@ class Source : public vips::VSource {
 
     /**
      * Create a new source from a pointer.
-     * @param target Read from this pointer.
+     * @param source Read from this pointer.
      * @return A new Source class.
      */
     static Source
