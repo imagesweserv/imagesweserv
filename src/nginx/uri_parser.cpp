@@ -261,7 +261,7 @@ uintptr_t escape_path(u_char *dst, u_char *src, size_t size) {
             size--;
         }
 
-        return static_cast<uintptr_t>(n);
+        return n;
     }
 
     while (size) {
@@ -467,9 +467,9 @@ ngx_int_t parse_url(ngx_pool_t *pool, ngx_str_t &uri, ngx_str_t *output) {
     }
 
     // uri.find_first_of("/?")
-    u_char *path = reinterpret_cast<u_char *>(ngx_strlchr(ref, last, '/'));
+    u_char *path = ngx_strlchr(ref, last, '/');
     if (path == nullptr) {
-        path = reinterpret_cast<u_char *>(ngx_strlchr(ref, last, '?'));
+        path = ngx_strlchr(ref, last, '?');
     }
 
     if (path == nullptr) {
@@ -479,7 +479,7 @@ ngx_int_t parse_url(ngx_pool_t *pool, ngx_str_t &uri, ngx_str_t *output) {
     // Remove the fragment part of the path. Per RFC 3986, this is always the
     // last part of the URI. We are looking for the first '#' so that we deal
     // gracefully with non-conformant URI such as http://example.com#foo#bar
-    u_char *fragment = reinterpret_cast<u_char *>(ngx_strlchr(path, last, '#'));
+    u_char *fragment = ngx_strlchr(path, last, '#');
     if (fragment != nullptr) {
         last = fragment;
     }
@@ -514,7 +514,7 @@ ngx_int_t parse_url(ngx_pool_t *pool, ngx_str_t &uri, ngx_str_t *output) {
         bool unicode = false;
 
         for (p = label; p < path && !idna_is_dot(p); ++p) {
-            if (static_cast<u_char>(*p) > 0x80) {
+            if (*p > 0x80) {
                 unicode = true;
             }
         }

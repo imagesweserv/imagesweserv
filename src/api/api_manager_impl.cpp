@@ -68,9 +68,8 @@ ApiManagerImpl::ApiManagerImpl(std::unique_ptr<ApiEnvInterface> env)
         // We limit the pipe within the nginx module
         vips_pipe_read_limit_set(-1);
 
-        handler_id_ = g_log_set_handler(
-            "VIPS", static_cast<GLogLevelFlags>(G_LOG_LEVEL_WARNING),
-            static_cast<GLogFunc>(vips_warning_callback), env_.get());
+        handler_id_ = g_log_set_handler("VIPS", G_LOG_LEVEL_WARNING,
+                                        vips_warning_callback, env_.get());
     } else {  // LCOV_EXCL_START
         std::string error(vips_error_buffer());
         vips_error_clear();

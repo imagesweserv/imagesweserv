@@ -34,8 +34,7 @@ ngx_int_t set_expires_header(ngx_http_request_t *r, time_t max_age) {
     e->value.len = len - 1;
 
 #if defined(nginx_version) && nginx_version >= 1023000
-    ngx_table_elt_t *cc =
-        reinterpret_cast<ngx_table_elt_t *>(r->headers_out.cache_control);
+    ngx_table_elt_t *cc = r->headers_out.cache_control;
 
     if (cc == nullptr) {
 #else
