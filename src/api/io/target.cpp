@@ -122,13 +122,11 @@ Target Target::new_to_pointer(std::unique_ptr<io::TargetInterface> target) {
 }
 
 Target Target::new_to_file(const std::string &filename) {
-    return Target(
-        std::unique_ptr<io::TargetInterface>(new FileTarget(filename)));
+    return Target(std::make_unique<FileTarget>(filename));
 }
 
 Target Target::new_to_memory(std::string *out_memory) {
-    return Target(
-        std::unique_ptr<io::TargetInterface>(new MemoryTarget(out_memory)));
+    return Target(std::make_unique<MemoryTarget>(out_memory));
 }
 
 void Target::setup(const std::string &extension) const {

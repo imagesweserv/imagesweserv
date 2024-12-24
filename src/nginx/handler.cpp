@@ -70,7 +70,7 @@ ngx_int_t ngx_weserv_request_handler(ngx_http_request_t *r) {
     // Set the request's weserv module context
     ngx_http_set_ctx(r, ctx, ngx_weserv_module);
 
-    std::unique_ptr<HTTPRequest> http_request(new HTTPRequest);
+    auto http_request = std::make_unique<HTTPRequest>();
     http_request->set_url(parsed_uri)
         .set_max_redirects(lc->max_redirects)
         .set_header("User-Agent", lc->user_agent);

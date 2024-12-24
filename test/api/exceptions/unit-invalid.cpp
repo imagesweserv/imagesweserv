@@ -49,8 +49,7 @@ TEST_CASE("invalid image", "[invalid]") {
             int64_t read_pos_{0};
         };
 
-        Status status = process(
-            std::unique_ptr<SourceInterface>(new InvalidSource()), nullptr);
+        Status status = process(std::make_unique<InvalidSource>(), nullptr);
 
         CHECK(!status.ok());
         CHECK(status.code() == static_cast<int>(Status::Code::InvalidImage));
@@ -75,8 +74,7 @@ TEST_CASE("invalid image", "[invalid]") {
             }
         };
 
-        Status status = process(
-            std::unique_ptr<SourceInterface>(new UnreadableSource()), nullptr);
+        Status status = process(std::make_unique<UnreadableSource>(), nullptr);
 
         CHECK(!status.ok());
         CHECK(status.code() == static_cast<int>(Status::Code::InvalidImage));

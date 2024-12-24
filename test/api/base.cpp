@@ -147,8 +147,8 @@ int main(const int argc, const char *argv[]) {
     fixtures = std::make_shared<Fixtures>(fixtures_dir);
 
     weserv::api::ApiManagerFactory weserv_factory;
-    api_manager = weserv_factory.create_api_manager(
-        std::unique_ptr<weserv::api::ApiEnvInterface>(new TestEnvironment()));
+    api_manager =
+        weserv_factory.create_api_manager(std::make_unique<TestEnvironment>());
 
     return session.run();
 }

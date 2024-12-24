@@ -632,7 +632,7 @@ ngx_int_t ngx_weserv_init_module(ngx_cycle_t *cycle) {
 
     api::ApiManagerFactory weserv_factory;
     mc->weserv = weserv_factory.create_api_manager(
-        std::unique_ptr<api::ApiEnvInterface>(new NgxEnvironment(cycle->log)));
+        std::make_unique<NgxEnvironment>(cycle->log));
 
     return NGX_OK;
 }
@@ -893,10 +893,8 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
     ngx_chain_t *out = nullptr;
     Status status = mc->weserv->process(
         ngx_str_to_std(r->args),
-        std::unique_ptr<api::io::SourceInterface>(
-            new NgxSource(ctx->image, ctx->last - ctx->image)),
-        std::unique_ptr<api::io::TargetInterface>(
-            new NgxTarget(r, upstream_ctx, &out)),
+        std::make_unique<NgxSource>(ctx->image, ctx->last - ctx->image),
+        std::make_unique<NgxTarget>(r, upstream_ctx, &out),
         lc->api_conf);
 
     // Memory is released immediately after the image output is complete,

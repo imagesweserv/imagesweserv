@@ -40,7 +40,7 @@ using vips::VError;
 
 std::shared_ptr<ApiManager>
 ApiManagerFactory::create_api_manager(std::unique_ptr<ApiEnvInterface> env) {
-    return std::shared_ptr<ApiManager>(new ApiManagerImpl(std::move(env)));
+    return std::make_shared<ApiManagerImpl>(std::move(env));
 }
 
 /**
