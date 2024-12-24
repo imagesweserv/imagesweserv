@@ -1,7 +1,7 @@
 # Based on:
 # https://github.com/nginx/pkg-oss/blob/master/alpine/Makefile
 # https://github.com/nginxinc/docker-nginx/blob/master/mainline/alpine/Dockerfile
-FROM alpine:3.20
+FROM alpine:3.21
 
 LABEL maintainer="Kleis Auke Wolthuizen <info@kleisauke.nl>"
 
