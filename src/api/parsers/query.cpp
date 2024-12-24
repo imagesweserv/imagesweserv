@@ -18,7 +18,7 @@ using enums::Position;
 constexpr size_t MAX_KEY_LENGTH = sizeof("lossless") - 1;
 
 // A vector must not have more than 10000 elements.
-const size_t MAX_VECTOR_SIZE = 10000;
+constexpr size_t MAX_VECTOR_SIZE = 10000;
 
 // Note: We check crazy numbers within `numeric.h`
 

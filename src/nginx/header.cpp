@@ -7,10 +7,10 @@
 namespace weserv::nginx {
 
 const ngx_str_t CONTENT_DISPOSITION = ngx_string("Content-Disposition");
-const u_char CONTENT_DISPOSITION_LOWCASE[] = "content-disposition";
+constexpr u_char CONTENT_DISPOSITION_LOWCASE[] = "content-disposition";
 
 const ngx_str_t LINK = ngx_string("Link");
-const u_char LINK_LOWCASE[] = "link";
+constexpr u_char LINK_LOWCASE[] = "link";
 
 ngx_int_t set_expires_header(ngx_http_request_t *r, time_t max_age) {
     ngx_table_elt_t *e = r->headers_out.expires;

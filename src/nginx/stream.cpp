@@ -9,7 +9,7 @@ ngx_str_t application_json = ngx_string("application/json");
 
 // 1 year by default.
 // See: https://github.com/weserv/images/issues/186
-const time_t MAX_AGE_DEFAULT = 60 * 60 * 24 * 365;
+constexpr time_t MAX_AGE_DEFAULT = 60 * 60 * 24 * 365;
 
 int64_t NgxSource::read(void *data, size_t length) {
     int64_t bytes_read =

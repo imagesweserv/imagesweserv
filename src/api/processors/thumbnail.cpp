@@ -16,7 +16,7 @@ using enums::ImageType;
 // shrink-on-load feature. You can set this to false for more
 // consistent results and to avoid occasional small image shifting.
 // NOTE: Can be overridden with `&fsol=0`.
-const bool FAST_SHRINK_ON_LOAD = true;
+constexpr bool FAST_SHRINK_ON_LOAD = true;
 
 using io::Blob;
 using io::Source;

@@ -11,13 +11,13 @@ namespace weserv::nginx {
  * Parameters for Punycode, see:
  * http://tools.ietf.org/html/rfc3492#section-5
  */
-const uint32_t BASE = 36;
-const uint32_t TMIN = 1;
-const uint32_t TMAX = 26;
-const uint32_t SKEW = 38;
-const uint32_t DAMP = 700;
-const uint32_t INITIAL_BIAS = 72;
-const uint32_t INITIAL_N = 128;
+constexpr uint32_t BASE = 36;
+constexpr uint32_t TMIN = 1;
+constexpr uint32_t TMAX = 26;
+constexpr uint32_t SKEW = 38;
+constexpr uint32_t DAMP = 700;
+constexpr uint32_t INITIAL_BIAS = 72;
+constexpr uint32_t INITIAL_N = 128;
 
 /**
  * Array of skip-bytes-per-initial character.
@@ -78,8 +78,8 @@ uint32_t adapt(uint32_t delta, uint32_t n_points, bool is_first) {
     delta /= is_first ? DAMP : 2;
     delta += delta / n_points;
 
-    const uint32_t s = BASE - TMIN;
-    const uint32_t t = (s * TMAX) / 2;
+    constexpr uint32_t s = BASE - TMIN;
+    constexpr uint32_t t = (s * TMAX) / 2;
 
     uint32_t k = 0;
     for (; delta > t; k += BASE) {
