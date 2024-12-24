@@ -39,12 +39,12 @@ ngx_int_t ngx_weserv_request_handler(ngx_http_request_t *r) {
         Status status = {Status::Code::InvalidUri, "Unable to parse URI",
                          Status::ErrorCause::Application};
 
-        ngx_chain_t out;
-        if (ngx_weserv_return_error(r, nullptr, status, &out) != NGX_OK) {
+        ngx_chain_t *out = ngx_weserv_error_chain(r, nullptr, status);
+        if (out == NGX_CHAIN_ERROR) {
             return NGX_ERROR;
         }
 
-        return ngx_http_output_filter(r, &out);
+        return ngx_http_output_filter(r, out);
     }
 
     // Allocate a weserv upstream module context
@@ -81,16 +81,15 @@ ngx_int_t ngx_weserv_request_handler(ngx_http_request_t *r) {
     rc = ngx_weserv_send_http_request(r, ctx);
 
     if (rc == NGX_ERROR) {
-        ngx_chain_t out;
-        if (ngx_weserv_return_error(r, ctx, ctx->response_status, &out) !=
-            NGX_OK) {
+        ngx_chain_t *out = ngx_weserv_error_chain(r, ctx, ctx->response_status);
+        if (out == NGX_CHAIN_ERROR) {
             return NGX_ERROR;
         }
 
         // Don't forget to reset the module context set above
         ngx_http_set_ctx(r, nullptr, ngx_weserv_module);
 
-        return ngx_http_output_filter(r, &out);
+        return ngx_http_output_filter(r, out);
     }
 
     return rc;

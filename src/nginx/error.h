@@ -10,9 +10,8 @@ extern "C" {
 
 namespace weserv::nginx {
 
-ngx_int_t ngx_weserv_return_error(ngx_http_request_t *r,
-                                  ngx_weserv_upstream_ctx_t *upstream_ctx,
-                                  const api::utils::Status &status,
-                                  ngx_chain_t *out);
+ngx_chain_t *ngx_weserv_error_chain(ngx_http_request_t *r,
+                                    ngx_weserv_upstream_ctx_t *upstream_ctx,
+                                    const api::utils::Status &status);
 
 }  // namespace weserv::nginx

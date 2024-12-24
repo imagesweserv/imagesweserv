@@ -734,6 +734,8 @@ ngx_int_t ngx_weserv_image_filter_read(ngx_http_request_t *r,
         b->pos += size;
 
         if (b->last_buf) {
+            ngx_free_chain(r->pool, cl);
+
             ctx->last = p;
             return NGX_OK;
         }
@@ -854,14 +856,13 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
             && !debug_output
 #endif
         ) {
-            ngx_chain_t out;
-            if (ngx_weserv_return_error(r, upstream_ctx,
-                                        upstream_ctx->response_status,
-                                        &out) != NGX_OK) {
+            ngx_chain_t *out = ngx_weserv_error_chain(
+                r, upstream_ctx, upstream_ctx->response_status);
+            if (out == NGX_CHAIN_ERROR) {
                 return NGX_ERROR;
             }
 
-            return ngx_weserv_finish(r, &out);
+            return ngx_weserv_finish(r, out);
         }
     }
 
@@ -877,13 +878,12 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
                              std::to_string(lc->max_size) + " bytes",
                          Status::ErrorCause::Application};
 
-        ngx_chain_t error;
-        if (ngx_weserv_return_error(r, upstream_ctx, status, &error) !=
-            NGX_OK) {
+        ngx_chain_t *out = ngx_weserv_error_chain(r, upstream_ctx, status);
+        if (out == NGX_CHAIN_ERROR) {
             return NGX_ERROR;
         }
 
-        return ngx_weserv_finish(r, &error);
+        return ngx_weserv_finish(r, out);
     }
 
     r->connection->buffered &= ~NGX_WESERV_IMAGE_BUFFERED;
@@ -909,17 +909,19 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
     ngx_pfree(r->pool, ctx->image);
 
     if (!status.ok()) {
-        ngx_chain_t error;
-        if (ngx_weserv_return_error(r, upstream_ctx, status, &error) !=
-            NGX_OK) {
+        ngx_chain_t *error = ngx_weserv_error_chain(r, upstream_ctx, status);
+        if (error == NGX_CHAIN_ERROR) {
             return NGX_ERROR;
         }
 
-        return ngx_weserv_finish(r, &error);
+        return ngx_weserv_finish(r, error);
     }
 
-    if (is_base64_needed(r) && output_chain_to_base64(r, out) != NGX_OK) {
-        return NGX_ERROR;
+    if (is_base64_needed(r)) {
+        out = output_chain_to_base64(r, out);
+        if (out == NGX_CHAIN_ERROR) {
+            return NGX_ERROR;
+        }
     }
 
     return ngx_weserv_finish(r, out);

@@ -9,9 +9,9 @@ using weserv::api::utils::Status;
 
 namespace weserv::nginx {
 
-ngx_int_t ngx_weserv_return_error(ngx_http_request_t *r,
-                                  ngx_weserv_upstream_ctx_t *upstream_ctx,
-                                  const Status &status, ngx_chain_t *out) {
+ngx_chain_t *ngx_weserv_error_chain(ngx_http_request_t *r,
+                                    ngx_weserv_upstream_ctx_t *upstream_ctx,
+                                    const Status &status) {
     ngx_uint_t http_status = status.http_code();
 
     // Redirect if the 'default' (or 'errorredirect') query parameter is given.
@@ -41,7 +41,7 @@ ngx_int_t ngx_weserv_return_error(ngx_http_request_t *r,
     off_t content_length = error.size();
     ngx_buf_t *buf = ngx_create_temp_buf(r->pool, content_length);
     if (buf == nullptr) {
-        return NGX_HTTP_INTERNAL_SERVER_ERROR;
+        return NGX_CHAIN_ERROR;
     }
 
     buf->last_buf = 1;
@@ -60,9 +60,15 @@ ngx_int_t ngx_weserv_return_error(ngx_http_request_t *r,
 
     r->headers_out.content_length = nullptr;
 
-    *out = {buf, nullptr};
+    ngx_chain_t *out = ngx_alloc_chain_link(r->pool);
+    if (out == nullptr) {
+        return NGX_CHAIN_ERROR;
+    }
 
-    return NGX_OK;
+    out->buf = buf;
+    out->next = nullptr;
+
+    return out;
 }
 
 }  // namespace weserv::nginx
