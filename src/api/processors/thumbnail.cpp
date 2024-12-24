@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <cmath>
 #include <string>
-#include <tuple>
 
 namespace weserv::api::processors {
 
@@ -186,10 +185,7 @@ std::pair<double, double> Thumbnail::resolve_shrink(int width,
 }
 
 double Thumbnail::resolve_common_shrink(int width, int height) const {
-    double hshrink;
-    double vshrink;
-
-    std::tie(hshrink, vshrink) = resolve_shrink(width, height);
+    auto [hshrink, vshrink] = resolve_shrink(width, height);
 
     return std::min(hshrink, vshrink);
 }
@@ -413,11 +409,8 @@ VImage Thumbnail::process(const VImage &image) const {
     int thumb_width = thumb.width();
     int thumb_height = thumb.height();
 
-    double hshrink;
-    double vshrink;
-
     // Shrink to page_height, so we work for multi-page images
-    std::tie(hshrink, vshrink) = resolve_shrink(thumb_width, page_height);
+    auto [hshrink, vshrink] = resolve_shrink(thumb_width, page_height);
 
     auto target_width =
         static_cast<int>(std::rint(static_cast<double>(thumb_width) / hshrink));

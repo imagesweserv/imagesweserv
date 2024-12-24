@@ -267,11 +267,10 @@ Mask::transformed_path_string(const std::vector<PathCoordinate> &coordinates,
     ss << std::fixed << std::showpoint << std::setprecision(1);
 
     for (size_t i = 0; i != coordinates.size(); ++i) {
-        PathCoordinate coordinate = coordinates[i];
+        auto [x, y] = coordinates[i];
 
         auto prepend = i == 0 ? "M" : " L";
-        ss << prepend << coordinate.x * scale + transl.x << " "
-           << coordinate.y * scale + transl.y;
+        ss << prepend << x * scale + transl.x << " " << y * scale + transl.y;
     }
 
     ss << " Z";

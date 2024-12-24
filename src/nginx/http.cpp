@@ -221,10 +221,7 @@ ngx_int_t ngx_weserv_upstream_create_request(ngx_http_request_t *r) {
     buffer_size += sizeof("Connection: Keep-Alive\r\n") - 1;
 
     // Add sizes of all headers and their values
-    for (const auto &header : http_request->request_headers()) {
-        const std::string &name = header.first;
-        const ngx_str_t &value = header.second;
-
+    for (const auto &[name, value] : http_request->request_headers()) {
         buffer_size += name.size();
         buffer_size += sizeof(": ") - 1;
         buffer_size += value.len;
@@ -251,10 +248,7 @@ ngx_int_t ngx_weserv_upstream_create_request(ngx_http_request_t *r) {
     append(buf, "Connection: Keep-Alive\r\n");
 
     // Append the headers provided by the caller
-    for (const auto &header : http_request->request_headers()) {
-        const std::string &name = header.first;
-        const ngx_str_t &value = header.second;
-
+    for (const auto &[name, value] : http_request->request_headers()) {
         append(buf, name);
         append(buf, ": ");
         append(buf, value);
