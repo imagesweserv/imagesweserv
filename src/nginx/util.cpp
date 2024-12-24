@@ -146,7 +146,7 @@ const char *log_levels[] = {
     "info",    // NGX_LOG_INFO
     "debug",   // NGX_LOG_DEBUG
 };
-constexpr ngx_uint_t LOG_LEVELS_COUNT = sizeof(log_levels) / sizeof(log_levels[0]);
+constexpr ngx_uint_t LOG_LEVELS_COUNT = std::size(log_levels);
 
 }  // namespace
 
