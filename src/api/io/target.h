@@ -1,10 +1,9 @@
 #pragma once
 
-#include "../utils/utility.h"
-
 #include <memory>
 #include <string>
 
+#include <vips/vips8>
 #include <weserv/io/target_interface.h>
 
 namespace weserv::api::io {

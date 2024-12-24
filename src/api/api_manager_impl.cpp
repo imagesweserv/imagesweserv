@@ -26,6 +26,8 @@
 #include "processors/tint.h"
 #include "processors/trim.h"
 
+#include "utils/utility.h"
+
 #include <exception>
 #include <utility>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "base.h"
 #include "../enums.h"
+#include "base.h"
 
 #include <string>
 #include <vector>

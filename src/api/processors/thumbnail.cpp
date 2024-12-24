@@ -2,6 +2,7 @@
 
 #include "../exceptions/large.h"
 #include "../io/blob.h"
+#include "../utils/utility.h"
 
 #include <algorithm>
 #include <cmath>

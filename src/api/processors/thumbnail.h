@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../enums.h"
 #include "../io/source.h"
 #include "base.h"
 

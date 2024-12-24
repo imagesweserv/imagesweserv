@@ -2,7 +2,6 @@
 
 #include "header.h"
 #include "uri_parser.h"
-#include "util.h"
 
 #include <string>
 
