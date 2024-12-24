@@ -51,7 +51,7 @@ static void weserv_source_init(WeservSource *source) {}
 /* private API */
 
 Source
-Source::new_from_pointer(const std::unique_ptr<io::SourceInterface> &source) {
+Source::new_from_pointer(const std::unique_ptr<SourceInterface> &source) {
     WeservSource *weserv_source = WESERV_SOURCE(
         g_object_new(WESERV_TYPE_SOURCE, "source", source.get(), nullptr));
 

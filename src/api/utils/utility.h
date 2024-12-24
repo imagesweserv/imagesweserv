@@ -220,7 +220,7 @@ inline VImage stay_sequential(const VImage &image,
 
     // Copy to memory evaluates the image, so set up the timeout handler,
     // if necessary.
-    utils::setup_timeout_handler(image, process_timeout);
+    setup_timeout_handler(image, process_timeout);
 
     auto copy = image.copy_memory().copy();
     copy.remove(VIPS_META_SEQUENTIAL);

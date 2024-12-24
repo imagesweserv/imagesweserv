@@ -17,7 +17,7 @@ struct WeservSource {
     VipsSource parent_object;
 
     /*< private >*/
-    io::SourceInterface *source;
+    SourceInterface *source;
 };
 
 #define WESERV_TYPE_SOURCE (weserv_source_get_type())
@@ -50,7 +50,7 @@ class Source : public vips::VSource {
      * @return A new Source class.
      */
     static Source
-    new_from_pointer(const std::unique_ptr<io::SourceInterface> &source);
+    new_from_pointer(const std::unique_ptr<SourceInterface> &source);
 
     /**
      * Create a source attached to a file.

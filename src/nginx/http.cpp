@@ -5,7 +5,7 @@
 #include "uri_parser.h"
 #include "util.h"
 
-using ::weserv::api::utils::Status;
+using weserv::api::utils::Status;
 
 namespace weserv::nginx {
 

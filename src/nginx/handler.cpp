@@ -10,7 +10,7 @@
 #include <string>
 #include <utility>
 
-using ::weserv::api::utils::Status;
+using weserv::api::utils::Status;
 
 namespace weserv::nginx {
 

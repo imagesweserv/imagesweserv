@@ -67,8 +67,7 @@ static void weserv_target_init(WeservTarget *target) {}
 
 /* private API */
 
-Target
-Target::new_to_pointer(const std::unique_ptr<io::TargetInterface> &target) {
+Target Target::new_to_pointer(const std::unique_ptr<TargetInterface> &target) {
     WeservTarget *weserv_target = WESERV_TARGET(
         g_object_new(WESERV_TYPE_TARGET, "target", target.get(), nullptr));
 
@@ -104,7 +103,7 @@ Target Target::new_to_memory() {
 void Target::setup(const std::string &extension) const {
     VipsTarget *output = get_target();
     if (WESERV_IS_TARGET(output)) {
-        io::TargetInterface *target = WESERV_TARGET(output)->target;
+        TargetInterface *target = WESERV_TARGET(output)->target;
         target->setup(extension);
     }
 }

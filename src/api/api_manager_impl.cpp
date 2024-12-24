@@ -144,10 +144,10 @@ Status ApiManagerImpl::exception_handler(const std::string &query) {
     }
 }
 
-utils::Status ApiManagerImpl::process(const std::string &query,
-                                      const Source &source,
-                                      const Target &target,
-                                      const Config &config) {
+Status ApiManagerImpl::process(const std::string &query,
+                               const Source &source,
+                               const Target &target,
+                               const Config &config) {
     auto query_holder = std::make_shared<parsers::Query>(query);
 
     // Note: the disadvantage of pre-resize extraction behaviour is that none
@@ -205,7 +205,7 @@ utils::Status ApiManagerImpl::process(const std::string &query,
     return Status::OK;
 }
 
-utils::Status
+Status
 ApiManagerImpl::process(const std::string &query,
                         const std::unique_ptr<io::SourceInterface> &source,
                         const std::unique_ptr<io::TargetInterface> &target,
@@ -219,10 +219,10 @@ ApiManagerImpl::process(const std::string &query,
     }
 }
 
-utils::Status ApiManagerImpl::process_file(const std::string &query,
-                                           const std::string &in_file,
-                                           const std::string &out_file,
-                                           const Config &config) {
+Status ApiManagerImpl::process_file(const std::string &query,
+                                    const std::string &in_file,
+                                    const std::string &out_file,
+                                    const Config &config) {
     try {
         return process(query, Source::new_from_file(in_file),
                        Target::new_to_file(out_file), config);
@@ -231,10 +231,10 @@ utils::Status ApiManagerImpl::process_file(const std::string &query,
     }
 }
 
-utils::Status ApiManagerImpl::process_file(const std::string &query,
-                                           const std::string &in_file,
-                                           std::string *out_buf,
-                                           const Config &config) {
+Status ApiManagerImpl::process_file(const std::string &query,
+                                    const std::string &in_file,
+                                    std::string *out_buf,
+                                    const Config &config) {
     try {
         auto target = Target::new_to_memory();
         Status status =
@@ -252,10 +252,10 @@ utils::Status ApiManagerImpl::process_file(const std::string &query,
     }
 }
 
-utils::Status ApiManagerImpl::process_buffer(const std::string &query,
-                                             const std::string &in_buf,
-                                             std::string *out_buf,
-                                             const Config &config) {
+Status ApiManagerImpl::process_buffer(const std::string &query,
+                                      const std::string &in_buf,
+                                      std::string *out_buf,
+                                      const Config &config) {
     try {
         auto target = Target::new_to_memory();
         Status status =

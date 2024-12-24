@@ -2,7 +2,7 @@
 
 #include "module.h"
 
-using ::weserv::api::utils::Status;
+using weserv::api::utils::Status;
 
 namespace weserv::nginx {
 

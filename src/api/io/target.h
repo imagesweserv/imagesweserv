@@ -17,7 +17,7 @@ struct WeservTarget {
     VipsTarget parent_object;
 
     /*< private >*/
-    io::TargetInterface *target;
+    TargetInterface *target;
 };
 
 #define WESERV_TYPE_TARGET (weserv_target_get_type())
@@ -50,7 +50,7 @@ class Target : public vips::VTarget {
      * @return A new Target class.
      */
     static Target
-    new_to_pointer(const std::unique_ptr<io::TargetInterface> &target);
+    new_to_pointer(const std::unique_ptr<TargetInterface> &target);
 
     /**
      * Create a target which will output to a file.

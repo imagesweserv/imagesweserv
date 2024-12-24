@@ -9,8 +9,8 @@
 
 #include <weserv/enums.h>
 
-using ::weserv::api::enums::Output;
-using ::weserv::api::utils::Status;
+using weserv::api::enums::Output;
+using weserv::api::utils::Status;
 
 namespace weserv::nginx {
 
@@ -961,14 +961,14 @@ ngx_int_t ngx_weserv_postconfiguration(ngx_conf_t *cf) {
  * it must be globally scoped.
  */
 ngx_module_t ngx_weserv_module = {
-    NGX_MODULE_V1,                            // v1 module type
-    &::weserv::nginx::ngx_weserv_module_ctx,  // ctx
-    ::weserv::nginx::ngx_weserv_commands,     // commands
-    NGX_HTTP_MODULE,                          // type
+    NGX_MODULE_V1,                          // v1 module type
+    &weserv::nginx::ngx_weserv_module_ctx,  // ctx
+    weserv::nginx::ngx_weserv_commands,     // commands
+    NGX_HTTP_MODULE,                        // type
     // ngx_int_t (*init_master)(ngx_log_t *log)
     nullptr,
     // ngx_int_t (*init_module)(ngx_cycle_t *cycle);
-    ::weserv::nginx::ngx_weserv_init_module,
+    weserv::nginx::ngx_weserv_init_module,
     // ngx_int_t (*init_process)(ngx_cycle_t *cycle);
     nullptr,
     // ngx_int_t (*init_thread)(ngx_cycle_t *cycle);

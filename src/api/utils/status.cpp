@@ -13,8 +13,7 @@ Status::Status(int code, const std::string &message)
 
 Status::Status() : Status(200, "", ErrorCause::Internal) {}
 
-Status::Status(Status::Code code, std::string message,
-               Status::ErrorCause error_cause)
+Status::Status(Code code, std::string message, ErrorCause error_cause)
     : Status(static_cast<int>(code), std::move(message), error_cause) {}
 
 bool Status::operator==(const Status &x) const {
@@ -129,7 +128,7 @@ std::string Status::to_json() const {
                     http_out << "The requested URL returned error: " << code_;
                 }
                 break;
-            case Status::ErrorCause::Application:
+            case ErrorCause::Application:
             default:
                 if (!message_.empty()) {
                     http_out << message_;
