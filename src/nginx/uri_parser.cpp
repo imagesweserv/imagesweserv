@@ -38,7 +38,7 @@ static const u_char UTF8_SKIP[256] = {
 /**
  * Skips to the next character in a UTF-8 string.
  */
-#define utf8_next_char(p) (p) + UTF8_SKIP[*(u_char *)(p)]
+#define utf8_next_char(p) ((p) + UTF8_SKIP[*(p)])
 
 /**
  * RFC 3490, section 3.1 says '.', 0x3002, 0xFF0E, and 0xFF61 count as
