@@ -38,6 +38,19 @@ inline bool is_16_bit(const VipsInterpretation interpretation) {
            interpretation == VIPS_INTERPRETATION_GREY16;
 }
 
+#if VIPS_VERSION_AT_LEAST(8, 16, 0)
+/**
+ * Is this image palette-based?
+ * @param image The source image.
+ * @return A bool indicating whether the image is palette-based.
+ */
+inline bool is_palette(const VImage &image) {
+    return image.get_typeof(VIPS_META_PALETTE) != 0
+               ? static_cast<bool>(image.get_int(VIPS_META_PALETTE))
+               : false;
+}
+#endif
+
 /**
  * Does this image have an embedded profile?
  * @param image The source image.
@@ -478,6 +491,16 @@ inline std::string image_to_json(const VImage &image,
     }
     json << R"("isProgressive":)"
          << (image.get_typeof("interlaced") != 0 ? "true" : "false") << ",";
+#if VIPS_VERSION_AT_LEAST(8, 16, 0)
+    json << R"("isPalette":)" << (is_palette(image) ? "true" : "false") << ",";
+#endif
+#if VIPS_VERSION_AT_LEAST(8, 15, 0)
+    if (image.get_typeof(VIPS_META_BITS_PER_SAMPLE) != 0) {
+        json << R"("bitsPerSample":)"
+             << image.get_int(VIPS_META_BITS_PER_SAMPLE) << ",";
+    }
+#endif
+    // `palette-bit-depth` is deprecated in favor of `bits-per-sample`.
     if (image.get_typeof("palette-bit-depth") != 0) {
         json << R"("paletteBitDepth":)" << image.get_int("palette-bit-depth")
              << ",";
