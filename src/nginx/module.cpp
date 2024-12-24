@@ -548,7 +548,7 @@ char *ngx_weserv_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child) {
     ngx_conf_merge_value(conf->enable, prev->enable, 0);
     ngx_conf_merge_uint_value(conf->mode, prev->mode, NGX_WESERV_PROXY_MODE);
 
-    if (conf->deny == NULL) {
+    if (conf->deny == nullptr) {
         conf->deny = prev->deny;
     }
 
@@ -791,7 +791,7 @@ ngx_int_t ngx_weserv_finish_debug_output(ngx_http_request_t *r,
     }
 
     out->buf = buf;
-    out->next = NULL;
+    out->next = nullptr;
 
     return ngx_weserv_finish_debug_chain(r, out);
 }

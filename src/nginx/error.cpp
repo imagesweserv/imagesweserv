@@ -27,7 +27,7 @@ ngx_int_t ngx_weserv_return_error(ngx_http_request_t *r,
             (void)parse_url(r->pool, redirect_uri, &parsed_redirect);
         } else if (upstream_ctx != nullptr &&
                    upstream_ctx->request != nullptr) {
-            // NB: ->request will be NULL in case of redirect errors.
+            // NB: ->request will be nullptr in case of redirect errors.
             parsed_redirect = upstream_ctx->request->url();
         }
 
