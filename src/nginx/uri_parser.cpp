@@ -396,7 +396,7 @@ ngx_int_t concat_url(ngx_pool_t *pool, const ngx_str_t &base,
     // + 1 for possible slash
     output->data =
         static_cast<u_char *>(ngx_pnalloc(pool, urllen + newlen + 1));
-    if (p == nullptr) {
+    if (output->data == nullptr) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
 
