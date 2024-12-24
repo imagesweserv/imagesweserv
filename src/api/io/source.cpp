@@ -11,14 +11,14 @@ G_DEFINE_TYPE(WeservSource, weserv_source, VIPS_TYPE_SOURCE);
 
 static gint64 weserv_source_read_wrapper(VipsSource *source, void *data,
                                          size_t length) {
-    auto weserv_source = WESERV_SOURCE(source)->source;
+    auto *weserv_source = WESERV_SOURCE(source)->source;
 
     return weserv_source->read(data, length);
 }
 
 static gint64 weserv_source_seek_wrapper(VipsSource *source, gint64 offset,
                                          int whence) {
-    auto weserv_source = WESERV_SOURCE(source)->source;
+    auto *weserv_source = WESERV_SOURCE(source)->source;
 
     return weserv_source->seek(offset, whence);
 }

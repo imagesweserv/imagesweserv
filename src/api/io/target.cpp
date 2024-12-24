@@ -11,7 +11,7 @@ G_DEFINE_TYPE(WeservTarget, weserv_target, VIPS_TYPE_TARGET);
 
 static gint64 weserv_target_write_wrapper(VipsTarget *target, const void *data,
                                           size_t length) {
-    auto weserv_target = WESERV_TARGET(target)->target;
+    auto *weserv_target = WESERV_TARGET(target)->target;
 
     return weserv_target->write(data, length);
 }
@@ -19,21 +19,21 @@ static gint64 weserv_target_write_wrapper(VipsTarget *target, const void *data,
 // LCOV_EXCL_START
 static gint64 weserv_target_read_wrapper(VipsTarget *target, void *data,
                                          size_t length) {
-    auto weserv_target = WESERV_TARGET(target)->target;
+    auto *weserv_target = WESERV_TARGET(target)->target;
 
     return weserv_target->read(data, length);
 }
 
 static gint64 weserv_target_seek_wrapper(VipsTarget *target, gint64 offset,
                                          int whence) {
-    auto weserv_target = WESERV_TARGET(target)->target;
+    auto *weserv_target = WESERV_TARGET(target)->target;
 
     return weserv_target->seek(offset, whence);
 }
 // LCOV_EXCL_STOP
 
 static int weserv_target_end_wrapper(VipsTarget *target) {
-    auto weserv_target = WESERV_TARGET(target)->target;
+    auto *weserv_target = WESERV_TARGET(target)->target;
 
     return weserv_target->end();
 }
