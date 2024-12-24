@@ -8,15 +8,14 @@ namespace weserv::nginx {
 
 ngx_int_t check_image_too_large(ngx_event_pipe_t *p) {
     auto *r = static_cast<ngx_http_request_t *>(p->input_ctx);
+    if (r == nullptr) {
+        return NGX_ERROR;
+    }
 
     auto *lc = static_cast<ngx_weserv_loc_conf_t *>(
         ngx_http_get_module_loc_conf(r, ngx_weserv_module));
 
     if (lc->max_size > 0 && p->read_length > static_cast<off_t>(lc->max_size)) {
-        if (r == nullptr) {
-            return NGX_ERROR;
-        }
-
         auto *ctx = static_cast<ngx_weserv_upstream_ctx_t *>(
             ngx_http_get_module_ctx(r, ngx_weserv_module));
 
