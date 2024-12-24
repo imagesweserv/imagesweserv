@@ -41,9 +41,6 @@ ngx_int_t check_image_too_large(ngx_event_pipe_t *p) {
 }
 
 ngx_int_t ngx_weserv_copy_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
-    ngx_buf_t *b;
-    ngx_chain_t *cl;
-
     if (buf->pos == buf->last) {
         return NGX_OK;
     }
@@ -66,12 +63,12 @@ ngx_int_t ngx_weserv_copy_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
         return NGX_OK;
     }
 
-    cl = ngx_chain_get_free_buf(p->pool, &p->free);
+    ngx_chain_t *cl = ngx_chain_get_free_buf(p->pool, &p->free);
     if (cl == nullptr) {
         return NGX_ERROR;
     }
 
-    b = cl->buf;
+    ngx_buf_t *b = cl->buf;
 
     ngx_memcpy(b, buf, sizeof(ngx_buf_t));
     b->shadow = buf;
@@ -124,10 +121,6 @@ ngx_int_t ngx_weserv_copy_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
  * Reference: ngx_http_proxy_chunked_filter
  */
 ngx_int_t ngx_weserv_chunked_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
-    ngx_int_t rc;
-    ngx_buf_t *b, **prev;
-    ngx_chain_t *cl;
-
     if (buf->pos == buf->last) {
         return NGX_OK;
     }
@@ -160,23 +153,23 @@ ngx_int_t ngx_weserv_chunked_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
         return NGX_OK;
     }
 
-    b = nullptr;
-    prev = &buf->shadow;
+    ngx_buf_t *b = nullptr;
+    ngx_buf_t **prev = &buf->shadow;
 
     for (;;) {
         // In NGINX version 1.27.2, the signature of ngx_http_parse_chunked()
         // was modified to enable passing upstream response trailers to the
         // client.
-        rc = ngx_http_parse_chunked(r, buf, &ctx->chunked
+        ngx_int_t rc = ngx_http_parse_chunked(r, buf, &ctx->chunked
 #if defined(nginx_version) && nginx_version >= 1027002
-                                    , 0
+                                              , 0
 #endif
         );
 
         if (rc == NGX_OK) {
             // A chunk has been parsed successfully
 
-            cl = ngx_chain_get_free_buf(p->pool, &p->free);
+            ngx_chain_t *cl = ngx_chain_get_free_buf(p->pool, &p->free);
             if (cl == nullptr) {
                 return NGX_ERROR;
             }
