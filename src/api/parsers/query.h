@@ -23,7 +23,7 @@ class Query {
     explicit Query(const std::string &value);
 
     template <typename E,
-              typename = typename std::enable_if<std::is_enum<E>::value>::type>
+              typename = std::enable_if_t<std::is_enum_v<E>>>
     /**
      * This is the only function that can pass enums, the other functions do not
      * allow this.
@@ -36,21 +36,21 @@ class Query {
     }
 
     template <typename T,
-              typename = typename std::enable_if<!std::is_enum<T>::value>::type>
+              typename = std::enable_if_t<!std::is_enum_v<T>>>
     const inline T &get(const std::string &key, const T &default_val) const {
         auto it = query_map_.find(key);
         return it != query_map_.end() ? std::get<T>(it->second) : default_val;
     }
 
     template <typename T,
-              typename = typename std::enable_if<!std::is_enum<T>::value>::type>
+              typename = std::enable_if_t<!std::is_enum_v<T>>>
     const inline T &get(const std::string &key) const {
         const auto &val = query_map_.at(key);
         return std::get<T>(val);
     }
 
     template <typename T,
-              typename = typename std::enable_if<!std::is_enum<T>::value>::type,
+              typename = std::enable_if_t<!std::is_enum_v<T>>,
               typename Predicate>
     const inline T &get_if(const std::string &key, Predicate predicate,
                            const T &default_val) const {
@@ -67,7 +67,7 @@ class Query {
     }
 
     template <typename T,
-              typename = typename std::enable_if<!std::is_enum<T>::value>::type>
+              typename = std::enable_if_t<!std::is_enum_v<T>>>
     inline void update(const std::string &key, const T &val) {
         query_map_[key] = val;
     }
