@@ -827,7 +827,7 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
     ngx_weserv_upstream_ctx_t *upstream_ctx = nullptr;
 
     if (lc->mode == NGX_WESERV_PROXY_MODE) {
-        upstream_ctx = reinterpret_cast<ngx_weserv_upstream_ctx_t *>(ctx);
+        upstream_ctx = dynamic_cast<ngx_weserv_upstream_ctx_t *>(ctx);
 
 #if NGX_DEBUG
         if (upstream_ctx->debug == 1) {
