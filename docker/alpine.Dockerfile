@@ -45,7 +45,7 @@ RUN addgroup -g 101 -S nginx \
     && cmake --build _build -- -j$(nproc) \
     # Remove build directory and dependencies
     && rm -rf _build \
-    && apk del .build-deps \
+    && apk del --no-network .build-deps \
     # Bring in runtime dependencies
     && apk add --no-cache \
         openssl \
