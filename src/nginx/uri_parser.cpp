@@ -281,7 +281,7 @@ uintptr_t escape_path(u_char *dst, u_char *src, size_t size) {
 }
 
 ngx_int_t concat_url(ngx_pool_t *pool, const ngx_str_t &base,
-                     ngx_str_t &relative, ngx_str_t *output) {
+                     const ngx_str_t &relative, ngx_str_t *output) {
     // Try to append this new path to the old URL to the right of the host part
 
     // We must make our own copy of the URL to play with, as it may

@@ -12,7 +12,7 @@ namespace weserv::nginx {
 
 ngx_int_t ngx_weserv_return_error(ngx_http_request_t *r,
                                   ngx_weserv_upstream_ctx_t *upstream_ctx,
-                                  Status status, ngx_chain_t *out) {
+                                  const Status &status, ngx_chain_t *out) {
     ngx_uint_t http_status = status.http_code();
 
     // Redirect if the 'default' (or 'errorredirect') query parameter is given.

@@ -14,8 +14,8 @@ namespace weserv::api::processors {
 
 class Stream {
  public:
-    Stream(std::shared_ptr<parsers::Query> query, const Config &config)
-        : query_(std::move(query)), config_(config) {}
+    Stream(const std::shared_ptr<parsers::Query> &query, const Config &config)
+        : query_(query), config_(config) {}
 
     VImage new_from_source(const io::Source &source) const;
 
@@ -25,7 +25,7 @@ class Stream {
     /**
      * Query holder.
      */
-    const std::shared_ptr<parsers::Query> query_;
+    const std::shared_ptr<parsers::Query> &query_;
 
     /**
      * Global config.

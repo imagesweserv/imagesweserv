@@ -3,7 +3,6 @@
 #include "../parsers/query.h"
 
 #include <memory>
-#include <utility>
 
 #include <vips/vips8>
 #include <weserv/config.h>
@@ -14,8 +13,9 @@ using vips::VImage;
 
 class ImageProcessor {
  public:
-    ImageProcessor(std::shared_ptr<parsers::Query> query, const Config &config)
-        : query_(std::move(query)), config_(config) {}
+    ImageProcessor(const std::shared_ptr<parsers::Query> &query,
+                   const Config &config)
+        : query_(query), config_(config) {}
 
     virtual VImage process(const VImage &image) const = 0;
 
@@ -28,7 +28,7 @@ class ImageProcessor {
     /**
      * Query holder.
      */
-    const std::shared_ptr<parsers::Query> query_;
+    const std::shared_ptr<parsers::Query> &query_;
 
     /**
      * Global config.
