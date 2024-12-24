@@ -474,10 +474,12 @@ void *ngx_weserv_create_loc_conf(ngx_conf_t *cf) {
     // Set up SSL if available
 #if NGX_HTTP_SSL
     // Initialize SSL
-    auto ssl_cleanup = ngx_pool_cleanup_add(cf->pool, sizeof(ngx_ssl_t));
+    ngx_pool_cleanup_t *ssl_cleanup =
+        ngx_pool_cleanup_add(cf->pool, sizeof(ngx_ssl_t));
     if (ssl_cleanup == nullptr) {
         return nullptr;
     }
+
     auto *ssl = static_cast<ngx_ssl_t *>(ssl_cleanup->data);
     ngx_memzero(ssl, sizeof(ngx_ssl_t));
     ssl->log = cf->log;
@@ -490,9 +492,9 @@ void *ngx_weserv_create_loc_conf(ngx_conf_t *cf) {
     }
 
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
-    // Must use lowest OpenSSL security level to ensure maximum compatibility.
-    // This is basically the same as using OpenSSL 1.0, which does not have a
-    // minimum security policy.
+    // Use the lowest OpenSSL security level to ensure maximum compatibility.
+    // This is basically the same as using OpenSSL 1.0, which lacks a minimum
+    // security policy.
     SSL_CTX_set_security_level(ssl->ctx, 0);
 #endif
 
@@ -500,6 +502,12 @@ void *ngx_weserv_create_loc_conf(ngx_conf_t *cf) {
 
     lc->upstream_conf.ssl = ssl;
     lc->upstream_conf.ssl_session_reuse = 1;
+
+    if (ngx_ssl_client_session_cache(cf, lc->upstream_conf.ssl,
+                                     lc->upstream_conf.ssl_session_reuse) !=
+        NGX_OK) {
+        return nullptr;
+    }
 
     // For SNI (Server Name Indication) support
     lc->upstream_conf.ssl_server_name = 1;
