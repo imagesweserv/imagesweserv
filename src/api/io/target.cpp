@@ -2,7 +2,6 @@
 
 namespace weserv::api::io {
 
-#ifdef WESERV_ENABLE_TRUE_STREAMING
 /* Class implementation */
 
 // We need C linkage for this.
@@ -64,11 +63,12 @@ static void weserv_target_class_init(WeservTargetClass *klass) {
     // clang-format on
 }
 
-static void weserv_target_init(WeservTarget *output) {}
+static void weserv_target_init(WeservTarget *target) {}
 
 /* private API */
 
-Target Target::new_to_pointer(std::unique_ptr<io::TargetInterface> target) {
+Target
+Target::new_to_pointer(const std::unique_ptr<io::TargetInterface> &target) {
     WeservTarget *weserv_target = WESERV_TARGET(
         g_object_new(WESERV_TYPE_TARGET, "target", target.get(), nullptr));
 
@@ -116,30 +116,5 @@ int64_t Target::write(const void *data, size_t length) const {
 int Target::end() const {
     return vips_target_end(get_target());
 }
-#else
-Target Target::new_to_pointer(std::unique_ptr<io::TargetInterface> target) {
-    return Target(std::move(target));
-}
-
-Target Target::new_to_file(const std::string &filename) {
-    return Target(std::make_unique<FileTarget>(filename));
-}
-
-Target Target::new_to_memory(std::string *out_memory) {
-    return Target(std::make_unique<MemoryTarget>(out_memory));
-}
-
-void Target::setup(const std::string &extension) const {
-    target_->setup(extension);
-}
-
-int64_t Target::write(const void *data, size_t length) const {
-    return target_->write(data, length);
-}
-
-int Target::end() const {
-    return target_->end();
-}
-#endif
 
 }  // namespace weserv::api::io

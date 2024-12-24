@@ -98,14 +98,13 @@ VImage Stream::new_from_source(const Source &source, const Blob &blob,
                                vips::VOption *options) {
     VImage out_image;
 
-#ifdef WESERV_ENABLE_TRUE_STREAMING
     if (blob.is_null()) {
         options->set("source", source)->set("out", &out_image);
-    } else
-#endif
+    } else {
         // We don't take a copy of the data or free it
         options =
             options->set("buffer", blob.get_blob())->set("out", &out_image);
+    }
 
     try {
         VImage::call(loader.c_str(), options);
@@ -206,7 +205,6 @@ void Stream::resolve_query(const VImage &image) const {
 VImage Stream::new_from_source(const Source &source) const {
     Blob blob;
 
-#ifdef WESERV_ENABLE_TRUE_STREAMING
     const char *loader = vips_foreign_find_load_source(source.get_source());
     if (loader == nullptr) {
         // Try with the old buffer-based loaders
@@ -223,16 +221,6 @@ VImage Stream::new_from_source(const Source &source) const {
             throw exceptions::InvalidImageException(vips_error_buffer());
         }
     }
-#else
-    const char *loader = vips_foreign_find_load_buffer(source.buffer().data(),
-                                                       source.buffer().size());
-    if (loader == nullptr) {
-        throw exceptions::InvalidImageException(vips_error_buffer());
-    }
-
-    blob = Blob(
-        vips_blob_new(nullptr, source.buffer().data(), source.buffer().size()));
-#endif
 
     ImageType image_type = utils::determine_image_type(loader);
 
@@ -518,21 +506,8 @@ void Stream::write_to_target(const VImage &image, const Target &target) const {
         // Set up the timeout handler, if necessary
         utils::setup_timeout_handler(copy, config_.process_timeout);
 
-#ifdef WESERV_ENABLE_TRUE_STREAMING
         // Write the image to the target
         copy.write_to_target(extension.c_str(), target, save_options);
-#else
-        void *buf;
-        size_t size;
-
-        // Write the image to a formatted string
-        copy.write_to_buffer(extension.c_str(), &buf, &size, save_options);
-
-        target.write(buf, size);
-        target.end();
-
-        g_free(buf);
-#endif
     }
 }
 

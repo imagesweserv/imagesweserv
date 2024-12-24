@@ -30,11 +30,10 @@ VImage buffer_to_image(const std::string &buf) {
     return out;
 }
 
-Status process(std::unique_ptr<SourceInterface> source,
-               std::unique_ptr<TargetInterface> target,
+Status process(const std::unique_ptr<SourceInterface> &source,
+               const std::unique_ptr<TargetInterface> &target,
                const std::string &query, const Config &config) {
-    return api_manager->process(query, std::move(source), std::move(target),
-                                config);
+    return api_manager->process(query, source, target, config);
 }
 
 template <>

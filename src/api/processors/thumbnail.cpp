@@ -25,56 +25,28 @@ template <>
 VImage
 Thumbnail::new_from_source<ImageType::Jpeg>(const Source &source,
                                             vips::VOption *options) const {
-#ifdef WESERV_ENABLE_TRUE_STREAMING
     return VImage::jpegload_source(source, options);
-#else
-    // We don't take a copy of the data or free it
-    auto blob = Blob(
-        vips_blob_new(nullptr, source.buffer().data(), source.buffer().size()));
-    return VImage::jpegload_buffer(blob.get_blob(), options);
-#endif
 }
 
 template <>
 VImage
 Thumbnail::new_from_source<ImageType::Pdf>(const Source &source,
                                            vips::VOption *options) const {
-#ifdef WESERV_ENABLE_TRUE_STREAMING
     return VImage::pdfload_source(source, options);
-#else
-    // We don't take a copy of the data or free it
-    auto blob = Blob(
-        vips_blob_new(nullptr, source.buffer().data(), source.buffer().size()));
-    return VImage::pdfload_buffer(blob.get_blob(), options);
-#endif
 }
 
 template <>
 VImage
 Thumbnail::new_from_source<ImageType::Webp>(const Source &source,
                                             vips::VOption *options) const {
-#ifdef WESERV_ENABLE_TRUE_STREAMING
     return VImage::webpload_source(source, options);
-#else
-    // We don't take a copy of the data or free it
-    auto blob = Blob(
-        vips_blob_new(nullptr, source.buffer().data(), source.buffer().size()));
-    return VImage::webpload_buffer(blob.get_blob(), options);
-#endif
 }
 
 template <>
 VImage
 Thumbnail::new_from_source<ImageType::Tiff>(const Source &source,
                                             vips::VOption *options) const {
-#ifdef WESERV_ENABLE_TRUE_STREAMING
     return VImage::tiffload_source(source, options);
-#else
-    // We don't take a copy of the data or free it
-    auto blob = Blob(
-        vips_blob_new(nullptr, source.buffer().data(), source.buffer().size()));
-    return VImage::tiffload_buffer(blob.get_blob(), options);
-#endif
 }
 
 // TODO(kleisauke): Support whole-slide images(?)
@@ -82,40 +54,21 @@ Thumbnail::new_from_source<ImageType::Tiff>(const Source &source,
 VImage
 Thumbnail::new_from_source<ImageType::OpenSlide>(const Source &source,
                                                  vips::VOption *options) const {
-#ifdef WESERV_ENABLE_TRUE_STREAMING
     return VImage::openslideload_source(source, options);
-#else
-    // openslideload_buffer is not available
-    return nullptr;
-#endif
 }*/
 
 template <>
 VImage
 Thumbnail::new_from_source<ImageType::Svg>(const Source &source,
                                            vips::VOption *options) const {
-#ifdef WESERV_ENABLE_TRUE_STREAMING
     return VImage::svgload_source(source, options);
-#else
-    // We don't take a copy of the data or free it
-    auto blob = Blob(
-        vips_blob_new(nullptr, source.buffer().data(), source.buffer().size()));
-    return VImage::svgload_buffer(blob.get_blob(), options);
-#endif
 }
 
 template <>
 VImage
 Thumbnail::new_from_source<ImageType::Heif>(const Source &source,
                                             vips::VOption *options) const {
-#ifdef WESERV_ENABLE_TRUE_STREAMING
     return VImage::heifload_source(source, options);
-#else
-    // We don't take a copy of the data or free it
-    auto blob = Blob(
-        vips_blob_new(nullptr, source.buffer().data(), source.buffer().size()));
-    return VImage::heifload_buffer(blob.get_blob(), options);
-#endif
 }
 
 std::pair<double, double> Thumbnail::resolve_shrink(int width,

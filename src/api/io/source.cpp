@@ -1,11 +1,7 @@
 #include "source.h"
 
-#include "../exceptions/unreadable.h"  // for UnreadableImageException
-#include <fstream>                     // for ifstream
-
 namespace weserv::api::io {
 
-#ifdef WESERV_ENABLE_TRUE_STREAMING
 /* Class implementation */
 
 // We need C linkage for this.
@@ -54,7 +50,8 @@ static void weserv_source_init(WeservSource *source) {}
 
 /* private API */
 
-Source Source::new_from_pointer(std::unique_ptr<io::SourceInterface> source) {
+Source
+Source::new_from_pointer(const std::unique_ptr<io::SourceInterface> &source) {
     WeservSource *weserv_source = WESERV_SOURCE(
         g_object_new(WESERV_TYPE_SOURCE, "source", source.get(), nullptr));
 
@@ -87,39 +84,5 @@ Source Source::new_from_buffer(const std::string &buffer) {
 
     return Source(source);
 }
-#else
-#define SOURCE_BUFFER_SIZE 4096  // = (size_t) ngx_pagesize;
-
-Source Source::new_from_pointer(std::unique_ptr<io::SourceInterface> source) {
-    char temp_buffer[SOURCE_BUFFER_SIZE];
-    std::string buffer;
-    int64_t bytes_read;
-
-    do {
-        bytes_read = source->read(temp_buffer, SOURCE_BUFFER_SIZE);
-
-        if (bytes_read == -1) {
-            throw exceptions::UnreadableImageException(
-                "read error while buffering image");
-        }
-
-        buffer.append(temp_buffer, bytes_read);
-    } while (bytes_read > 0);
-
-    return Source(buffer);
-}
-
-Source Source::new_from_file(const std::string &filename) {
-    std::ifstream t(filename);
-    std::stringstream buffer;
-    buffer << t.rdbuf();
-
-    return Source(buffer.str());
-}
-
-Source Source::new_from_buffer(const std::string &buffer) {
-    return Source(buffer);
-}
-#endif
 
 }  // namespace weserv::api::io

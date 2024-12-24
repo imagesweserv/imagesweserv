@@ -58,12 +58,6 @@ TEST_CASE("invalid image", "[invalid]") {
                    ContainsSubstring("Invalid or unsupported image format"));
     }
     SECTION("empty source") {
-        if (vips_version(0) < 8 ||
-            (vips_version(0) == 8 && vips_version(1) < 13)) {
-            SUCCEED("requires libvips 8.13+, skipping test");
-            return;
-        }
-
         class UnreadableSource : public SourceInterface {
             int64_t read(void * /* unsused */, size_t /* unsused */) override {
                 return -1;

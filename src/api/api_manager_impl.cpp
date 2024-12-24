@@ -208,12 +208,12 @@ utils::Status ApiManagerImpl::process(const std::string &query,
 
 utils::Status
 ApiManagerImpl::process(const std::string &query,
-                        std::unique_ptr<io::SourceInterface> source,
-                        std::unique_ptr<io::TargetInterface> target,
+                        const std::unique_ptr<io::SourceInterface> &source,
+                        const std::unique_ptr<io::TargetInterface> &target,
                         const Config &config) {
     try {
-        return process(query, Source::new_from_pointer(std::move(source)),
-                       Target::new_to_pointer(std::move(target)), config);
+        return process(query, Source::new_from_pointer(source),
+                       Target::new_to_pointer(target), config);
     } catch (...) {
         // We'll pass the query string for debugging purposes
         return exception_handler(query);
@@ -237,21 +237,15 @@ utils::Status ApiManagerImpl::process_file(const std::string &query,
                                            std::string *out_buf,
                                            const Config &config) {
     try {
-#ifdef WESERV_ENABLE_TRUE_STREAMING
         auto target = Target::new_to_memory();
-#else
-        auto target = Target::new_to_memory(out_buf);
-#endif
         Status status =
             process(query, Source::new_from_file(in_file), target, config);
 
-#ifdef WESERV_ENABLE_TRUE_STREAMING
         if (status.ok() && out_buf != nullptr) {
             size_t length;
             const void *out = vips_blob_get(target.get_target()->blob, &length);
             out_buf->assign(static_cast<const char *>(out), length);
         }
-#endif
 
         return status;
     } catch (...) {
@@ -264,21 +258,15 @@ utils::Status ApiManagerImpl::process_buffer(const std::string &query,
                                              std::string *out_buf,
                                              const Config &config) {
     try {
-#ifdef WESERV_ENABLE_TRUE_STREAMING
         auto target = Target::new_to_memory();
-#else
-        auto target = Target::new_to_memory(out_buf);
-#endif
         Status status =
             process(query, Source::new_from_buffer(in_buf), target, config);
 
-#ifdef WESERV_ENABLE_TRUE_STREAMING
         if (status.ok() && out_buf != nullptr) {
             size_t length;
             const void *out = vips_blob_get(target.get_target()->blob, &length);
             out_buf->assign(static_cast<const char *>(out), length);
         }
-#endif
         return status;
     } catch (...) {
         return exception_handler(query);
