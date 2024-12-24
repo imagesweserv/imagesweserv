@@ -7,9 +7,9 @@ using ::weserv::api::utils::Status;
 namespace weserv::nginx {
 
 ngx_int_t check_image_too_large(ngx_event_pipe_t *p) {
-    auto *r = reinterpret_cast<ngx_http_request_t *>(p->input_ctx);
+    auto *r = static_cast<ngx_http_request_t *>(p->input_ctx);
 
-    auto *lc = reinterpret_cast<ngx_weserv_loc_conf_t *>(
+    auto *lc = static_cast<ngx_weserv_loc_conf_t *>(
         ngx_http_get_module_loc_conf(r, ngx_weserv_module));
 
     if (lc->max_size > 0 && p->read_length > static_cast<off_t>(lc->max_size)) {
@@ -17,7 +17,7 @@ ngx_int_t check_image_too_large(ngx_event_pipe_t *p) {
             return NGX_ERROR;
         }
 
-        auto *ctx = reinterpret_cast<ngx_weserv_upstream_ctx_t *>(
+        auto *ctx = static_cast<ngx_weserv_upstream_ctx_t *>(
             ngx_http_get_module_ctx(r, ngx_weserv_module));
 
         if (ctx == nullptr) {
@@ -56,7 +56,7 @@ ngx_int_t ngx_weserv_copy_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
                       "upstream sent more data than specified in "
                       "\"Content-Length\" header");
 
-        auto *r = reinterpret_cast<ngx_http_request_t *>(p->input_ctx);
+        auto *r = static_cast<ngx_http_request_t *>(p->input_ctx);
         r->upstream->keepalive = 0;
         p->upstream_done = 1;
 
@@ -110,7 +110,7 @@ ngx_int_t ngx_weserv_copy_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
     p->length -= b->last - b->pos;
 
     if (p->length == 0) {
-        auto *r = reinterpret_cast<ngx_http_request_t *>(p->input_ctx);
+        auto *r = static_cast<ngx_http_request_t *>(p->input_ctx);
         r->upstream->keepalive = !r->upstream->headers_in.connection_close;
     }
 
@@ -125,12 +125,12 @@ ngx_int_t ngx_weserv_chunked_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
         return NGX_OK;
     }
 
-    auto *r = reinterpret_cast<ngx_http_request_t *>(p->input_ctx);
+    auto *r = static_cast<ngx_http_request_t *>(p->input_ctx);
     if (r == nullptr) {
         return NGX_ERROR;
     }
 
-    auto *ctx = reinterpret_cast<ngx_weserv_upstream_ctx_t *>(
+    auto *ctx = static_cast<ngx_weserv_upstream_ctx_t *>(
         ngx_http_get_module_ctx(r, ngx_weserv_module));
 
     if (ctx == nullptr) {
@@ -274,12 +274,12 @@ ngx_int_t ngx_weserv_chunked_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
 }
 
 ngx_int_t ngx_weserv_input_filter_init(void *data) {
-    auto *r = reinterpret_cast<ngx_http_request_t *>(data);
+    auto *r = static_cast<ngx_http_request_t *>(data);
     if (r == nullptr) {
         return NGX_ERROR;
     }
 
-    auto *ctx = reinterpret_cast<ngx_weserv_upstream_ctx_t *>(
+    auto *ctx = static_cast<ngx_weserv_upstream_ctx_t *>(
         ngx_http_get_module_ctx(r, ngx_weserv_module));
 
     if (ctx == nullptr) {

@@ -286,8 +286,7 @@ ngx_int_t concat_url(ngx_pool_t *pool, const ngx_str_t &base,
 
     // We must make our own copy of the URL to play with, as it may
     // point to read-only data
-    u_char *url_clone =
-        reinterpret_cast<u_char *>(ngx_pnalloc(pool, base.len + 1));
+    auto *url_clone = static_cast<u_char *>(ngx_pnalloc(pool, base.len + 1));
     if (url_clone == nullptr) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
@@ -396,7 +395,7 @@ ngx_int_t concat_url(ngx_pool_t *pool, const ngx_str_t &base,
 
     // + 1 for possible slash
     output->data =
-        reinterpret_cast<u_char *>(ngx_pnalloc(pool, urllen + newlen + 1));
+        static_cast<u_char *>(ngx_pnalloc(pool, urllen + newlen + 1));
     if (p == nullptr) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
@@ -424,7 +423,7 @@ ngx_int_t parse_url(ngx_pool_t *pool, ngx_str_t &uri, ngx_str_t *output) {
     }
 
     u_char *src = uri.data;
-    u_char *dst = reinterpret_cast<u_char *>(ngx_pnalloc(pool, uri.len));
+    auto *dst = static_cast<u_char *>(ngx_pnalloc(pool, uri.len));
     if (dst == nullptr) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
@@ -499,7 +498,7 @@ ngx_int_t parse_url(ngx_pool_t *pool, ngx_str_t &uri, ngx_str_t *output) {
         return NGX_ERROR;
     }
 
-    output->data = reinterpret_cast<u_char *>(
+    output->data = static_cast<u_char *>(
         ngx_pnalloc(pool, protocol.len + 253 + path_length + escaped_length));
     if (output->data == nullptr) {
         return NGX_ERROR;

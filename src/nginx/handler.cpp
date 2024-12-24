@@ -15,7 +15,7 @@ using ::weserv::api::utils::Status;
 namespace weserv::nginx {
 
 ngx_int_t ngx_weserv_request_handler(ngx_http_request_t *r) {
-    auto *lc = reinterpret_cast<ngx_weserv_loc_conf_t *>(
+    auto *lc = static_cast<ngx_weserv_loc_conf_t *>(
         ngx_http_get_module_loc_conf(r, ngx_weserv_module));
 
     // Response to 'GET' and 'HEAD' requests only

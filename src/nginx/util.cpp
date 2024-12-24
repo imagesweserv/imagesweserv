@@ -31,7 +31,7 @@ ngx_int_t output_chain_to_base64(ngx_http_request_t *r, ngx_chain_t *out) {
     off_t content_length = r->headers_out.content_length_n;
 
     ngx_str_t src;
-    src.data = reinterpret_cast<u_char *>(ngx_palloc(r->pool, content_length));
+    src.data = static_cast<u_char *>(ngx_palloc(r->pool, content_length));
     if (src.data == nullptr) {
         return NGX_ERROR;
     }
@@ -58,7 +58,7 @@ ngx_int_t output_chain_to_base64(ngx_http_request_t *r, ngx_chain_t *out) {
 
     ngx_str_t base64;
     base64.len = ngx_base64_encoded_length(src.len);
-    base64.data = reinterpret_cast<u_char *>(ngx_palloc(r->pool, base64.len));
+    base64.data = static_cast<u_char *>(ngx_palloc(r->pool, base64.len));
     if (base64.data == nullptr) {
         return NGX_ERROR;
     }

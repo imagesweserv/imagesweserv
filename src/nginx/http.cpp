@@ -94,8 +94,8 @@ Status ngx_weserv_upstream_set_url(ngx_pool_t *pool,
     // (without a forward slash preceding a question mark), and insert
     // a leading slash to form a valid path: /?query_parameters.
     if (parsed_url.uri.len > 0 && parsed_url.uri.data[0] == '?') {
-        auto *p = reinterpret_cast<u_char *>(
-            ngx_pnalloc(pool, parsed_url.uri.len + 1));
+        auto *p =
+            static_cast<u_char *>(ngx_pnalloc(pool, parsed_url.uri.len + 1));
         if (p == nullptr) {
             return {NGX_ERROR, "Out of memory"};
         }
@@ -190,7 +190,7 @@ ngx_int_t ngx_weserv_upstream_create_request(ngx_http_request_t *r) {
         return NGX_ERROR;
     }
 
-    auto *ctx = reinterpret_cast<ngx_weserv_upstream_ctx_t *>(
+    auto *ctx = static_cast<ngx_weserv_upstream_ctx_t *>(
         ngx_http_get_module_ctx(r, ngx_weserv_module));
 
     ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
@@ -294,7 +294,7 @@ ngx_int_t ngx_weserv_upstream_reinit_request(ngx_http_request_t *r) {
         return NGX_ERROR;
     }
 
-    auto *ctx = reinterpret_cast<ngx_weserv_upstream_ctx_t *>(
+    auto *ctx = static_cast<ngx_weserv_upstream_ctx_t *>(
         ngx_http_get_module_ctx(r, ngx_weserv_module));
 
     ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
@@ -332,7 +332,7 @@ ngx_int_t ngx_weserv_upstream_process_status_line(ngx_http_request_t *r) {
         return NGX_ERROR;
     }
 
-    auto *ctx = reinterpret_cast<ngx_weserv_upstream_ctx_t *>(
+    auto *ctx = static_cast<ngx_weserv_upstream_ctx_t *>(
         ngx_http_get_module_ctx(r, ngx_weserv_module));
 
     ngx_log_debug2(
@@ -394,7 +394,7 @@ ngx_int_t ngx_weserv_upstream_process_status_line(ngx_http_request_t *r) {
         return NGX_HTTP_UPSTREAM_INVALID_HEADER;
     }
 
-    auto *lc = reinterpret_cast<ngx_weserv_loc_conf_t *>(
+    auto *lc = static_cast<ngx_weserv_loc_conf_t *>(
         ngx_http_get_module_loc_conf(r, ngx_weserv_module));
 
     if (lc->canonical_header) {
@@ -435,7 +435,7 @@ ngx_int_t ngx_weserv_upstream_process_header(ngx_http_request_t *r) {
         return NGX_ERROR;
     }
 
-    auto *ctx = reinterpret_cast<ngx_weserv_upstream_ctx_t *>(
+    auto *ctx = static_cast<ngx_weserv_upstream_ctx_t *>(
         ngx_http_get_module_ctx(r, ngx_weserv_module));
 
     ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
@@ -531,7 +531,7 @@ ngx_int_t ngx_weserv_upstream_process_header(ngx_http_request_t *r) {
                 u->headers_in.content_length_n = -1;
             }
 
-            auto *lc = reinterpret_cast<ngx_weserv_loc_conf_t *>(
+            auto *lc = static_cast<ngx_weserv_loc_conf_t *>(
                 ngx_http_get_module_loc_conf(r, ngx_weserv_module));
 
             if (lc->max_size > 0 && u->headers_in.content_length_n >
@@ -602,7 +602,7 @@ void ngx_weserv_upstream_finalize_request(ngx_http_request_t *r, ngx_int_t rc) {
         return;
     }
 
-    auto *ctx = reinterpret_cast<ngx_weserv_upstream_ctx_t *>(
+    auto *ctx = static_cast<ngx_weserv_upstream_ctx_t *>(
         ngx_http_get_module_ctx(r, ngx_weserv_module));
 
     ngx_log_debug3(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
@@ -689,7 +689,7 @@ Status initialize_upstream_request(ngx_http_request_t *r,
         return {NGX_ERROR, "Out of memory"};
     }
 
-    auto *lc = reinterpret_cast<ngx_weserv_loc_conf_t *>(
+    auto *lc = static_cast<ngx_weserv_loc_conf_t *>(
         ngx_http_get_module_loc_conf(r, ngx_weserv_module));
 
     ngx_http_upstream_t *u = r->upstream;
@@ -702,7 +702,7 @@ Status initialize_upstream_request(ngx_http_request_t *r,
         return status;
     }
 
-    u->output.tag = reinterpret_cast<ngx_buf_tag_t>(&ngx_weserv_module);
+    u->output.tag = static_cast<ngx_buf_tag_t>(&ngx_weserv_module);
 
     u->conf = &lc->upstream_conf;
     u->buffering = lc->upstream_conf.buffering;
