@@ -124,18 +124,10 @@ std::string Mask::svg_path_by_type(const int width, const int height,
 
         coordinates.push_back({x, y});
 
-        if (x > x_max) {
-            x_max = x;
-        }
-        if (y > y_max) {
-            y_max = y;
-        }
-        if (x < x_min) {
-            x_min = x;
-        }
-        if (y < y_min) {
-            y_min = y;
-        }
+        x_max = std::max(x, x_max);
+        y_max = std::max(y, y_max);
+        x_min = std::min(x, x_min);
+        y_min = std::min(y, y_min);
     }
 
     *out_x_min = static_cast<int>(std::round(x_min));
@@ -197,18 +189,10 @@ Mask::heart_path(const float cx, const float cy, int *out_x_min, int *out_y_min,
 
         coordinates.push_back({x, y});
 
-        if (x > x_max) {
-            x_max = x;
-        }
-        if (y > y_max) {
-            y_max = y;
-        }
-        if (x < x_min) {
-            x_min = x;
-        }
-        if (y < y_min) {
-            y_min = y;
-        }
+        x_max = std::max(x, x_max);
+        y_max = std::max(y, y_max);
+        x_min = std::min(x, x_min);
+        y_min = std::min(y, y_min);
     }
 
     *out_x_min = static_cast<int>(std::round(x_min));
