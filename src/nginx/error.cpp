@@ -54,12 +54,6 @@ ngx_chain_t *ngx_weserv_error_chain(ngx_http_request_t *r,
     r->headers_out.content_type_lowcase = nullptr;
     r->headers_out.content_length_n = content_length;
 
-    if (r->headers_out.content_length) {
-        r->headers_out.content_length->hash = 0;
-    }
-
-    r->headers_out.content_length = nullptr;
-
     ngx_chain_t *out = ngx_alloc_chain_link(r->pool);
     if (out == nullptr) {
         return NGX_CHAIN_ERROR;

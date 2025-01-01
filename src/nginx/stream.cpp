@@ -174,12 +174,6 @@ int NgxTarget::end() {
     r_->headers_out.content_type_lowcase = nullptr;
     r_->headers_out.content_length_n = content_length_;
 
-    if (r_->headers_out.content_length) {
-        r_->headers_out.content_length->hash = 0;
-    }
-
-    r_->headers_out.content_length = nullptr;
-
     // Only set the Content-Disposition header on images
     if (!is_base64_needed(r_) &&
         !ngx_string_equal(mime_type, application_json) &&

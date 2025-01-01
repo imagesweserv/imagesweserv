@@ -691,12 +691,12 @@ ngx_int_t ngx_weserv_image_header_filter(ngx_http_request_t *r) {
         ctx->length = static_cast<size_t>(len);
     }
 
-    if (r->headers_out.refresh) {
-        r->headers_out.refresh->hash = 0;
-    }
-
     r->main_filter_need_in_memory = 1;
-    r->allow_ranges = 0;
+
+    ngx_http_clear_content_length(r);
+    ngx_http_clear_accept_ranges(r);
+    ngx_http_clear_last_modified(r);
+    ngx_http_clear_etag(r);
 
     return NGX_OK;
 }
@@ -771,12 +771,6 @@ ngx_int_t ngx_weserv_finish_debug_chain(ngx_http_request_t *r,
     ngx_str_set(&r->headers_out.content_type, "text/plain");
     r->headers_out.content_type_lowcase = nullptr;
     r->headers_out.content_length_n = content_length;
-
-    if (r->headers_out.content_length) {
-        r->headers_out.content_length->hash = 0;
-    }
-
-    r->headers_out.content_length = nullptr;
 
     return ngx_weserv_finish(r, out);
 }
