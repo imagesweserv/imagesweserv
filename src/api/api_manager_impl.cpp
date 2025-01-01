@@ -150,7 +150,7 @@ Status ApiManagerImpl::process(const std::string &query,
                                const Source &source,
                                const Target &target,
                                const Config &config) {
-    auto query_holder = std::make_shared<parsers::Query>(query);
+    auto query_holder = std::make_unique<parsers::Query>(query);
 
     // Note: the disadvantage of pre-resize extraction behaviour is that none
     // of the very fast shrink-on-load tricks are possible. This can make

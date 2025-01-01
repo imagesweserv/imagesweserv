@@ -13,7 +13,7 @@ using vips::VImage;
 
 class ImageProcessor {
  public:
-    ImageProcessor(const std::shared_ptr<parsers::Query> &query,
+    ImageProcessor(const std::unique_ptr<parsers::Query> &query,
                    const Config &config)
         : query_(query), config_(config) {}
 
@@ -28,7 +28,7 @@ class ImageProcessor {
     /**
      * Query holder.
      */
-    const std::shared_ptr<parsers::Query> &query_;
+    const std::unique_ptr<parsers::Query> &query_;
 
     /**
      * Global config.
