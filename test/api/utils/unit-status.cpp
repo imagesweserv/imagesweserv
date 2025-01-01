@@ -81,7 +81,7 @@ TEST_CASE("status", "[status]") {
         CHECK_THAT(json, ContainsSubstring(R"("status":"error")"));
         CHECK_THAT(json, ContainsSubstring(R"("code":404)"));
         CHECK_THAT(json, ContainsSubstring(
-                             R"("message":"The requested URL timed out.")"));
+                             R"("message":"The requested URL timed out")"));
 
         // https://github.com/weserv/images/issues/264
         json = Status(500, "", Status::ErrorCause::Upstream).to_json();
@@ -96,9 +96,9 @@ TEST_CASE("status", "[status]") {
 
         CHECK_THAT(json, ContainsSubstring(R"("status":"error")"));
         CHECK_THAT(json, ContainsSubstring(R"("code":404)"));
-        CHECK_THAT(json, ContainsSubstring(
-                             "The hostname of the origin is unresolvable (DNS) "
-                             "or blocked by policy."));
+        CHECK_THAT(json,
+                   ContainsSubstring(
+                       "The hostname of the origin is unresolvable (DNS)"));
 
         json = Status(310, "Will not follow a redirection to itself",
                       Status::ErrorCause::Upstream)

@@ -28,7 +28,7 @@ __DATA__
     GET /images?url=10.255.255.1
 --- response_headers
 Content-Type: application/json
---- response_body_like: ^.*"code":404,"message":"The requested URL timed out.".*$
+--- response_body_like: ^.*"code":404,"message":"The requested URL timed out".*$
 --- error_code: 404
 --- error_log
 [error]
@@ -52,7 +52,7 @@ Content-Type: application/json
 "GET /images?url=$ENV{TEST_NGINX_URI}/sleep"
 --- response_headers
 Content-Type: application/json
---- response_body_like: ^.*"code":404,"message":"The requested URL timed out.".*$
+--- response_body_like: ^.*"code":404,"message":"The requested URL timed out".*$
 --- error_code: 404
 --- error_log
 [error]

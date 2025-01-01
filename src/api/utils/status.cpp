@@ -116,11 +116,11 @@ std::string Status::to_json() const {
             case ErrorCause::Upstream:
                 if (code_ == 408 || code_ == 504) {
                     // Request or gateway timeout
-                    http_out << "The requested URL timed out.";
+                    http_out << "The requested URL timed out";
                 } else if (code_ == 502) {
-                    // DNS unresolvable or blocked by policy
+                    // DNS unresolvable
                     http_out << "The hostname of the origin is unresolvable "
-                                "(DNS) or blocked by policy.";
+                                "(DNS)";
                 } else if ((code_ == 310 || code_ == 413) &&
                            !message_.empty()) {
                     http_out << message_;

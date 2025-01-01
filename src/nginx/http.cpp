@@ -131,7 +131,7 @@ Status ngx_weserv_upstream_set_url(ngx_pool_t *pool,
     // Return Host header and a URL path
     *host_header = parsed_url.host;
     // If the URL contains a port, include it in the host header
-    if (!(parsed_url.no_port || parsed_url.port == parsed_url.default_port)) {
+    if (!parsed_url.no_port && parsed_url.port != parsed_url.default_port) {
         // Extend the Host header to include ':<port>'
         host_header->len += 1 + parsed_url.port_text.len;
     }
@@ -624,8 +624,7 @@ void ngx_weserv_upstream_finalize_request(ngx_http_request_t *r, ngx_int_t rc) {
                                     Status::ErrorCause::Upstream};
         }
 
-        // Reset redirect flag
-        ctx->redirecting = 0;
+        rc = NGX_ERROR;
     } else if (ctx->redirecting) {
         // Swap the initial HTTP request out
         std::unique_ptr<HTTPRequest> request;
@@ -644,8 +643,7 @@ void ngx_weserv_upstream_finalize_request(ngx_http_request_t *r, ngx_int_t rc) {
                                     "Will not follow a redirection to itself",
                                     Status::ErrorCause::Upstream};
 
-            // Reset redirect flag
-            ctx->redirecting = 0;
+            rc = NGX_ERROR;
         } else if (request->redirect_count() >= request->max_redirects()) {
             ctx->response_status = {
                 310,
@@ -653,8 +651,7 @@ void ngx_weserv_upstream_finalize_request(ngx_http_request_t *r, ngx_int_t rc) {
                     std::to_string(request->max_redirects()) + " redirects",
                 Status::ErrorCause::Upstream};
 
-            // Reset redirect flag
-            ctx->redirecting = 0;
+            rc = NGX_ERROR;
         } else {  // Redirect if there are redirects left
             // Set new redirection URI and referer
             request->set_url(ctx->location);
@@ -669,13 +666,37 @@ void ngx_weserv_upstream_finalize_request(ngx_http_request_t *r, ngx_int_t rc) {
             ctx->request = std::move(request);
 
             rc = ngx_weserv_send_http_request(r, ctx);
-
-            if (rc == NGX_ERROR) {
-                // Reset redirect flag
-                ctx->redirecting = 0;
-            }
         }
     }
+
+    if (rc == NGX_ERROR) {
+        // Reset the redirect flag if an error occurs
+        ctx->redirecting = 0;
+    }
+}
+
+/**
+ * A resolve handler. Called by NGINX when a hostname needs to be resolved.
+ */
+void ngx_weserv_upstream_resolve_handler(ngx_resolver_ctx_t *resolver_ctx) {
+    auto *r = static_cast<ngx_http_request_t *>(resolver_ctx->data);
+
+    auto *ctx = static_cast<ngx_weserv_upstream_ctx_t *>(
+        ngx_http_get_module_ctx(r, ngx_weserv_module));
+
+    if (ctx == nullptr) {
+        return;
+    }
+
+    // Treat refused DNS queries as blocked (aligns with the "always_refuse"
+    // setting in Unbound)
+    if (resolver_ctx->state == NGX_RESOLVE_REFUSED) {
+        ctx->response_status = {Status::Code::InvalidUri,
+                                "Domain or TLD blocked by policy",
+                                Status::ErrorCause::Application};
+    }
+
+    ctx->original_resolver(resolver_ctx);
 }
 
 /**
@@ -758,6 +779,15 @@ ngx_int_t ngx_weserv_send_http_request(ngx_http_request_t *r,
 
     // Initiate the upstream connection by calling NGINX upstream
     ngx_http_upstream_init(r);
+
+    // Override the upstream resolve handler to our own to ensure
+    // a custom error message is provided for refused DNS queries
+    if (r->upstream->resolved->ctx != nullptr) {
+        ctx->original_resolver = r->upstream->resolved->ctx->handler;
+
+        r->upstream->resolved->ctx->handler =
+            ngx_weserv_upstream_resolve_handler;
+    }
 
     return NGX_DONE;
 }

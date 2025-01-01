@@ -104,6 +104,11 @@ struct ngx_weserv_upstream_ctx_t : ngx_weserv_base_ctx_t {
     std::unique_ptr<HTTPRequest> request;
 
     /**
+     * The original DNS resolver handler.
+     */
+    ngx_resolver_handler_pt original_resolver;
+
+    /**
      * Response information.
      */
 
