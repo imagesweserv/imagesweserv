@@ -909,12 +909,12 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
     ngx_pfree(r->pool, ctx->image);
 
     if (!status.ok()) {
-        ngx_chain_t *error = ngx_weserv_error_chain(r, upstream_ctx, status);
-        if (error == NGX_CHAIN_ERROR) {
+        out = ngx_weserv_error_chain(r, upstream_ctx, status);
+        if (out == NGX_CHAIN_ERROR) {
             return NGX_ERROR;
         }
 
-        return ngx_weserv_finish(r, error);
+        return ngx_weserv_finish(r, out);
     }
 
     if (is_base64_needed(r)) {

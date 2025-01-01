@@ -114,7 +114,7 @@ int64_t NgxTarget::read(void *data, size_t length) {
         bytes_read += size;
         length -= size;
 
-        if (length == 0 || b->last_buf) {
+        if (length == 0) {
             break;
         }
     }
