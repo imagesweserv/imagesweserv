@@ -895,8 +895,7 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
     Status status = mc->weserv->process(
         ngx_str_to_std(r->args),
         std::make_unique<NgxSource>(ctx->image, ctx->last - ctx->image),
-        std::make_unique<NgxTarget>(r, upstream_ctx, &out),
-        lc->api_conf);
+        std::make_unique<NgxTarget>(r, upstream_ctx, &out), lc->api_conf);
 
     // Memory is released immediately after the image output is complete,
     // without waiting for the entire response to be sent to the client

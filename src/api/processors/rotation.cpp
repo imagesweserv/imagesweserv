@@ -10,8 +10,8 @@ using parsers::Color;
 
 VImage Rotation::process(const VImage &image) const {
     // Only arbitrary angles are valid
-    auto rotation = query_->get_if<int>(
-        "ro", [](int r) { return r % 90 != 0; }, 0);
+    auto rotation =
+        query_->get_if<int>("ro", [](int r) { return r % 90 != 0; }, 0);
 
     // Should we process the image?
     // Skip for multi-page images

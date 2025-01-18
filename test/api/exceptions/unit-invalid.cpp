@@ -29,7 +29,8 @@ TEST_CASE("invalid image", "[invalid]") {
     SECTION("source") {
         class InvalidSource : public SourceInterface {
             int64_t read(void *data, size_t length) override {
-                int64_t available = std::min(length, buffer_.size() - read_pos_);
+                int64_t available =
+                    std::min(length, buffer_.size() - read_pos_);
                 if (available <= 0) {
                     return 0;
                 }
