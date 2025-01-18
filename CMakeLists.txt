@@ -98,11 +98,5 @@ endif()
 if (INSTALL_NGX_MODULE)
     add_subdirectory(third_party/rate-limit-nginx-module)
 
-    # Install the echo module only in debug builds
-    # (needed by the integration tests)
-    if (CMAKE_BUILD_TYPE MATCHES "Debug")
-        add_subdirectory(third_party/echo-nginx-module)
-    endif()
-
     add_subdirectory(third_party/nginx)
 endif()

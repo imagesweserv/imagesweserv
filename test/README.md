@@ -29,7 +29,6 @@ For the integration tests you need the following dependencies:
     * [Test::Nginx](https://metacpan.org/pod/Test::Nginx::Socket)
 
 * Nginx modules:
-    * [ngx_echo](https://github.com/openresty/echo-nginx-module)
     * ngx_weserv (i.e., this module)
 
 Note that Nginx is automatically configured and installed with the necessary

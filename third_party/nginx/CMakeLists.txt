@@ -23,14 +23,6 @@ set(NGX_CONFIGURE_OPTS
         #--with-google_perftools_module
         )
 
-# Install the echo module only in debug builds
-# (needed by the integration tests)
-if (CMAKE_BUILD_TYPE MATCHES "Debug")
-    list(APPEND NGX_CONFIGURE_OPTS
-            "--add$<$<BOOL:${NGX_DYN_MODULE}>:-dynamic>-module=${ECHO_MODULE_SOURCE}"
-            )
-endif()
-
 if (CMAKE_GENERATOR MATCHES "Make")
     # Use special command for Makefiles to support parallelism.
     set(MAKE_EXE "$(MAKE)")
